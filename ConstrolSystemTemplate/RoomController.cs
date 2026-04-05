@@ -23,7 +23,6 @@ namespace ConstrolSystemTemplate
         private ushort _volume;
         private ushort _brightness;
         private string _sourceName;
-        private RoomConfig config;
 
         /// <summary>Gets or sets the last selected video source ID.</summary>
         public ushort LastSelectedSourceId { get; set; }

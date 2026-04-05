@@ -169,6 +169,22 @@
   <ItemGroup>
     <Compile Include="Audio.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="contracts\AudioPrivacy.g.cs" />
+    <Compile Include="contracts\AudioSource.g.cs" />
+    <Compile Include="contracts\Camera.g.cs" />
+    <Compile Include="contracts\CameraPreset.g.cs" />
+    <Compile Include="contracts\CameraSelect.g.cs" />
+    <Compile Include="contracts\ComponentMediator.g.cs" />
+    <Compile Include="contracts\Contract.g.cs" />
+    <Compile Include="contracts\Lighting.g.cs" />
+    <Compile Include="contracts\MasterVolume.g.cs" />
+    <Compile Include="contracts\PowerButton.g.cs" />
+    <Compile Include="contracts\Settings.g.cs" />
+    <Compile Include="contracts\SystemControl.g.cs" />
+    <Compile Include="contracts\SystemInfo.g.cs" />
+    <Compile Include="contracts\UIEventArgs.g.cs" />
+    <Compile Include="contracts\VideoDestination.g.cs" />
+    <Compile Include="contracts\VideoSource.g.cs" />
     <Compile Include="ControlSystem.cs" />
     <Compile Include="JoinMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
