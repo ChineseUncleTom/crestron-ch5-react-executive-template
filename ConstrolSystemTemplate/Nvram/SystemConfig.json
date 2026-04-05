@@ -1,0 +1,947 @@
+{
+    "RoomInfo": {
+        "Name": "C# Playground",
+        "Number": "6666",
+        "PrimaryRoomNumber": 1
+    },
+
+    "Rooms": [
+        {
+            "Name": "Room 206",
+            "Number": "",
+            "Type": 3
+        },
+        {
+            "Name": "Room 204",
+            "Number": "",
+            "Type": 13
+        },
+        {
+            "Name": "Room 202",
+            "Number": "",
+            "Type": 13
+        },
+        {
+            "Name": "",
+            "Number": "N/A",
+            "Type": 0
+        }
+    ],
+
+    "Walls": [
+        { "Name": "Wall 206/204" },
+        { "Name": "Wall 204/202" }
+    ],
+
+    "Cameras": [
+        {
+            "Name": "Presenter 206",
+            "IpAddress": "172.168.0.51",
+            "PreviewUrl": "",
+            "Location": 1,
+            "SwitcherInput": 2,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "Audience 206",
+            "IpAddress": "172.168.0.50",
+            "PreviewUrl": "",
+            "Location": 1,
+            "SwitcherInput": 1,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "Presenter 204",
+            "IpAddress": "172.168.0.63",
+            "PreviewUrl": "",
+            "Location": 2,
+            "SwitcherInput": 2,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "Audience 204",
+            "IpAddress": "172.168.0.64",
+            "PreviewUrl": "",
+            "Location": 2,
+            "SwitcherInput": 1,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "Presenter 202",
+            "IpAddress": "",
+            "PreviewUrl": "",
+            "Location": 3,
+            "SwitcherInput": 2,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "Audience 202",
+            "IpAddress": "172.168.0.75",
+            "PreviewUrl": "",
+            "Location": 3,
+            "SwitcherInput": 1,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "",
+            "IpAddress": "172.168.0.74",
+            "PreviewUrl": "",
+            "Location": 0,
+            "SwitcherInput": 3,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "USB Camera 1",
+            "IpAddress": "",
+            "PreviewUrl": "",
+            "Location": 0,
+            "SwitcherInput": 0,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "USB Camera 2",
+            "IpAddress": "",
+            "PreviewUrl": "",
+            "Location": 0,
+            "SwitcherInput": 0,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        },
+        {
+            "Name": "USB Camera 3",
+            "IpAddress": "",
+            "PreviewUrl": "",
+            "Location": 0,
+            "SwitcherInput": 0,
+            "Presets": [
+                {
+                    "Name": "Preset 1",
+                    "Index": 1
+                },
+                {
+                    "Name": "Preset 2",
+                    "Index": 2
+                },
+                {
+                    "Name": "Preset 3",
+                    "Index": 3
+                },
+                {
+                    "Name": "Preset 4",
+                    "Index": 4
+                },
+                {
+                    "Name": "Preset 5",
+                    "Index": 5
+                },
+                {
+                    "Name": "Preset 6",
+                    "Index": 6
+                },
+                {
+                    "Name": "Preset 7",
+                    "Index": 7
+                },
+                {
+                    "Name": "Preset 8",
+                    "Index": 8
+                },
+                {
+                    "Name": "Preset 9",
+                    "Index": 9
+                },
+                {
+                    "Name": "Preset 10",
+                    "Index": 10
+                }
+            ]
+        }
+    ],
+
+    "CameraSwitchers": [
+        {
+            "Room": "RM01",
+            "IpAddress": "10.74.16.133"
+        },
+        {
+            "Room": "RM02",
+            "IpAddress": "10.74.16.121"
+        },
+        {
+            "Room": "RM03",
+            "IpAddress": "10.74.16.131"
+        }
+    ],
+
+    "ProjectorScreens": [
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "204",
+            "Room": 2,
+            "Relay": 1
+        },
+        {
+            "Name": "206",
+            "Room": 3,
+            "Relay": 2
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        },
+        {
+            "Name": "",
+            "Room": 0,
+            "Relay": 0
+        }
+    ],
+
+    "Dsp": [
+        {
+            "Room": "RMA",
+            "IpAddress": "172.168.1.20"
+        },
+        {
+            "Room": "RMB",
+            "IpAddress": "172.168.1.21"
+        },
+        {
+            "Room": "RMC",
+            "IpAddress": "172.168.1.22"
+        }
+    ],
+
+    "CeilingMics": [
+        {
+            "Room": "RMA",
+            "Index": 1,
+            "IpAddress": "172.168.1.8"
+        },
+        {
+            "Room": "RMA",
+            "Index": 2,
+            "IpAddress": "172.168.1.9"
+        },
+        {
+            "Room": "RMA",
+            "Index": 3,
+            "IpAddress": "172.168.1.10"
+        },
+        {
+            "Room": "RMA",
+            "Index": 4,
+            "IpAddress": "172.168.1.11"
+        },
+        {
+            "Room": "RMA",
+            "Index": 5,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMA",
+            "Index": 6,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMB",
+            "Index": 1,
+            "IpAddress": "172.168.1.12"
+        },
+        {
+            "Room": "RMB",
+            "Index": 2,
+            "IpAddress": "172.168.1.13"
+        },
+        {
+            "Room": "RMB",
+            "Index": 3,
+            "IpAddress": "172.168.1.14"
+        },
+        {
+            "Room": "RMB",
+            "Index": 4,
+            "IpAddress": "172.168.1.15"
+        },
+        {
+            "Room": "RMC",
+            "Index": 1,
+            "IpAddress": "172.168.1.16"
+        },
+        {
+            "Room": "RMC",
+            "Index": 2,
+            "IpAddress": "172.168.1.17"
+        },
+        {
+            "Room": "RMC",
+            "Index": 3,
+            "IpAddress": "172.168.1.18"
+        },
+        {
+            "Room": "RMC",
+            "Index": 4,
+            "IpAddress": "172.168.1.19"
+        },
+        {
+            "Room": "RMD",
+            "Index": 1,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMD",
+            "Index": 2,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMD",
+            "Index": 3,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMD",
+            "Index": 4,
+            "IpAddress": ""
+        },
+        {
+            "Room": "RMD",
+            "Index": 5,
+            "IpAddress": ""
+        }
+    ],
+
+    "Wap": [
+        {
+            "Index": 1,
+            "MicNumber": "",
+            "IpAddress": "",
+            "MicNames": [ "", "", "", "", "", "", "", "" ]
+        },
+        {
+            "Index": 2,
+            "MicNumber": "",
+            "IpAddress": "",
+            "MicNames": [ "", "" ]
+        },
+        {
+            "Index": 3,
+            "MicNumber": "",
+            "IpAddress": "",
+            "MicNames": [ "", "" ]
+        }
+    ],
+
+    "VideoSources": [
+        { "Name": "None", "Id": 0 },
+        { "Name": "Teams Content", "Id": 1 },
+        { "Name": "Teams Attendance", "Id": 2 },
+        { "Name": "Table USB-C", "Id": 3 },
+        { "Name": "Table HDMI", "Id": 4 },
+        { "Name": "Wall HDMI", "Id": 5 },
+        { "Name": "", "Id": 6 },
+        { "Name": "", "Id": 7 },
+        { "Name": "", "Id": 8 }
+    ],
+
+    "VideoDestinations": [
+        {
+            "Name": "Display<br>Left<br>206",
+            "IsDisplay": true,
+            "IsLocal": true,
+            "DmLocate": 1
+        },
+        {
+            "Name": "Display<br>Right<br>206",
+            "IsDisplay": true,
+            "IsLocal": true,
+            "DmLocate": 1
+        },
+        {
+            "Name": "Projector<br>204",
+            "IsDisplay": false,
+            "IsLocal": true,
+            "DmLocate": 72
+        },
+        {
+            "Name": "Projector<br>202",
+            "IsDisplay": false,
+            "IsLocal": true,
+            "DmLocate": 73
+        },
+        {
+            "Name": "",
+            "IsDisplay": false,
+            "IsLocal": false,
+            "DmLocate": 0
+        },
+        {
+            "Name": "",
+            "IsDisplay": false,
+            "IsLocal": false,
+            "DmLocate": 0
+        },
+        {
+            "Name": "",
+            "IsDisplay": false,
+            "IsLocal": false,
+            "DmLocate": 0
+        },
+        {
+            "Name": "",
+            "IsDisplay": false,
+            "IsLocal": false,
+            "DmLocate": 0
+        },
+        {
+            "Name": "",
+            "IsDisplay": false,
+            "IsLocal": false,
+            "DmLocate": 0
+        }
+    ],
+
+    "VideoSourceLocates": [ 0, 0, 0 ],
+
+    "AudioSources": [
+        {
+            "Name": "Program Audio",
+            "Id": 0
+        },
+        {
+            "Name": "Wireless Mic 1",
+            "Id": 1
+        },
+        {
+            "Name": "Wireless Mic 2",
+            "Id": 2
+        },
+        {
+            "Name": "Wireless Mic 3",
+            "Id": 3
+        },
+        {
+            "Name": "Wireless Mic 4",
+            "Id": 4
+        }
+    ],
+
+    "Lightware": [
+        {
+            "Room": "A",
+            "IpAddress": "10.74.18.55"
+        },
+        {
+            "Room": "B",
+            "IpAddress": "10.74.18.57"
+        },
+        {
+            "Room": "C",
+            "IpAddress": "10.74.16.132"
+        }
+    ],
+
+    "Displays": [
+        {
+            "Index": 1,
+            "IpAddress": "10.74.16.127"
+        },
+        {
+            "Index": 2,
+            "IpAddress": "10.74.18.56"
+        },
+        {
+            "Index": 3,
+            "IpAddress": ""
+        },
+        {
+            "Index": 4,
+            "IpAddress": ""
+        },
+        {
+            "Index": 5,
+            "IpAddress": ""
+        },
+        {
+            "Index": 6,
+            "IpAddress": ""
+        },
+        {
+            "Index": 7,
+            "IpAddress": ""
+        },
+        {
+            "Index": 8,
+            "IpAddress": ""
+        }
+    ],
+
+    "Projectors": [
+        {
+            "Index": 1,
+            "IpAddress": ""
+        },
+        {
+            "Index": 2,
+            "IpAddress": ""
+        },
+        {
+            "Index": 3,
+            "IpAddress": "10.74.18.54"
+        },
+        {
+            "Index": 4,
+            "IpAddress": "10.74.16.122"
+        },
+        {
+            "Index": 5,
+            "IpAddress": ""
+        },
+        {
+            "Index": 6,
+            "IpAddress": ""
+        },
+        {
+            "Index": 7,
+            "IpAddress": ""
+        },
+        {
+            "Index": 8,
+            "IpAddress": ""
+        }
+    ],
+
+    "RoomVideoConfig": [
+        {
+            "Room": "RM01",
+            "VideoSwitchSourceOnDm": true,
+            "TeamsSecondaryDisplay": true,
+            "DmOutToTeams": 4,
+            "Destinations": [
+                {
+                    "DestIndex": 1,
+                    "IsLocal": true
+                },
+                {
+                    "DestIndex": 2,
+                    "IsLocal": true
+                }
+            ]
+        },
+        {
+            "Room": "RM02",
+            "VideoSwitchSourceOnDm": true,
+            "TeamsSecondaryDisplay": false,
+            "DmOutToTeams": 4,
+            "Destinations": [
+                {
+                    "DestIndex": 1,
+                    "IsLocal": true
+                }
+            ]
+        },
+        {
+            "Room": "RM03",
+            "VideoSwitchSourceOnDm": true,
+            "TeamsSecondaryDisplay": false,
+            "DmOutToTeams": 4,
+            "Destinations": [
+                {
+                    "DestIndex": 1,
+                    "IsLocal": true
+                }
+            ]
+        }
+    ]
+}

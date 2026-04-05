@@ -1,0 +1,42 @@
+# ── Node ─────────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+.env
+.env.local
+*.ch5z
+
+# ── Vite / TypeScript build artefacts ─────────────────────────────────────────
+panel-ui/dist/
+panel-ui/node_modules/
+panel-ui/*.ch5z
+
+# ── crestron-react-app-main build artefacts ──────────────────────────────────
+crestron-react-app-main/build/
+crestron-react-app-main/node_modules/
+
+# ── React template build artefacts ───────────────────────────────────────────
+react-template/build/
+react-template/node_modules/
+react-template/*.ch5z
+react-template/coverage/
+
+# ── C# / Visual Studio ───────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.csproj.user
+*.ncb
+*.opendb
+*.db
+*.aps
+*/bin/
+*/obj/
+*/packages/
+*/*.nupkg
+*/.nuget/
+
+# ── OS ────────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
