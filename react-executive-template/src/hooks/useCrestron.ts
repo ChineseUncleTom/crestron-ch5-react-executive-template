@@ -26,7 +26,7 @@ export const Joins = {
   LIGHT_TOGGLE: 4,
 
   // Digital – executive scenario macros (joins 5, 8–10)
-  SYSTEM_OFF_FB: 5,         // feedback from processor – room is currently powered on (high = on)
+  SYSTEM_ON_FB: 5,          // feedback from processor – room is currently powered on (high = on)
   SYSTEM_STARTUP_BTN: 8,
   SYSTEM_OFF_BTN: 9,
   PRESENT_TO_ROOM_BTN: 10,
@@ -442,4 +442,30 @@ export function useSendSerial(joinNumber: number): (value: string) => void {
     },
     [joinNumber],
   );
+}
+
+/**
+ * Returns true while the CH5 WebXPanel WebSocket session is connected to the
+ * Crestron control system.  Listens for 'ch5:connect' / 'ch5:disconnect'
+ * CustomEvents dispatched on the window by index.tsx (which owns the
+ * WebXPanel lifecycle), so no second import of @crestron/ch5-webxpanel is
+ * needed here.
+ */
+export function useWebXPanelOnline(): boolean {
+  const [isOnline, setIsOnline] = useState(false);
+
+  useEffect(() => {
+    const onConnect    = () => setIsOnline(true);
+    const onDisconnect = () => setIsOnline(false);
+
+    window.addEventListener('ch5:connect',    onConnect);
+    window.addEventListener('ch5:disconnect', onDisconnect);
+
+    return () => {
+      window.removeEventListener('ch5:connect',    onConnect);
+      window.removeEventListener('ch5:disconnect', onDisconnect);
+    };
+  }, []);
+
+  return isOnline;
 }
