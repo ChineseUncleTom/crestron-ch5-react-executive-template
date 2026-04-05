@@ -2,7 +2,7 @@ using System;
 using Crestron.SimplSharp;
 using Crestron.SimplSharpPro.DeviceSupport;
 
-namespace ConstrolSystemTemplate
+namespace ExecutiveControlSystem
 {
     /// <summary>
     /// Encapsulates all audio control logic for up to five audio sources and
@@ -23,9 +23,9 @@ namespace ConstrolSystemTemplate
     /// </summary>
     internal class Audio
     {
-        private const int    MAX_SOURCES     = 5;
-        private const ushort DEFAULT_VOLUME  = 32767; // 50 % of 65 535
-        private const ushort VOLUME_STEP     = 3276;  // ~5 % increment per press
+        private const int    MAX_SOURCES    = 5;
+        private const ushort DEFAULT_VOLUME = 32767; // 50 % of 65 535
+        private const ushort VOLUME_STEP    = 3276;  // ~5 % increment per press
 
         private readonly BasicTriListWithSmartObject _panel;
         private readonly SystemInfo _systemInfo;
@@ -36,7 +36,6 @@ namespace ConstrolSystemTemplate
         private bool _privacyMuted;
         private bool _wirelessMicMuted;
         private bool _ceilingMicMuted;
-        private bool _masterVolMuted;
 
         // ── Join arrays – indexed 0 = source 1, 4 = source 5 ─────────────────────
         private static readonly uint[] VolUpJoins   = { JoinMap.AUDIO_SRC_VOL_UP_1,   JoinMap.AUDIO_SRC_VOL_UP_2,   JoinMap.AUDIO_SRC_VOL_UP_3,   JoinMap.AUDIO_SRC_VOL_UP_4,   JoinMap.AUDIO_SRC_VOL_UP_5   };
@@ -151,14 +150,6 @@ namespace ConstrolSystemTemplate
             _panel.BooleanInput[JoinMap.AUDIO_CEILING_MIC_MUTE_FB].BoolValue = _ceilingMicMuted;
         }
 
-        /// <summary>Toggles the master-volume mute state and sends feedback to the panel.</summary>
-        public void HandleMasterVolMuteToggle()
-        {
-            _masterVolMuted = !_masterVolMuted;
-            CrestronConsole.PrintLine("[Audio] Master volume mute = {0}", _masterVolMuted);
-            _panel.BooleanInput[JoinMap.MASTER_VOL_MUTE_FB].BoolValue = _masterVolMuted;
-        }
-
         // ── Refresh / Initial Push ───────────────────────────────────────────────
 
         /// <summary>
@@ -169,13 +160,12 @@ namespace ConstrolSystemTemplate
         {
             for (int i = 0; i < MAX_SOURCES; i++)
             {
-                _panel.UShortInput[VolFbJoins[i]].UShortValue  = _volumes[i];
-                _panel.BooleanInput[MuteFbJoins[i]].BoolValue   = _muted[i];
+                _panel.UShortInput[VolFbJoins[i]].UShortValue = _volumes[i];
+                _panel.BooleanInput[MuteFbJoins[i]].BoolValue  = _muted[i];
             }
             _panel.BooleanInput[JoinMap.AUDIO_PRIVACY_MUTE_FB].BoolValue      = _privacyMuted;
             _panel.BooleanInput[JoinMap.AUDIO_WIRELESS_MIC_MUTE_FB].BoolValue = _wirelessMicMuted;
             _panel.BooleanInput[JoinMap.AUDIO_CEILING_MIC_MUTE_FB].BoolValue  = _ceilingMicMuted;
-            _panel.BooleanInput[JoinMap.MASTER_VOL_MUTE_FB].BoolValue         = _masterVolMuted;
             SendAudioSourceNames();
         }
 
@@ -185,7 +175,7 @@ namespace ConstrolSystemTemplate
         /// </summary>
         public void SendAudioSourceNames()
         {
-            if (_systemInfo.Config == null || _systemInfo.Config.AudioSources == null)
+            if (_systemInfo.Config?.AudioSources == null)
             {
                 CrestronConsole.PrintLine("[Audio] Cannot send source names – config not loaded");
                 return;

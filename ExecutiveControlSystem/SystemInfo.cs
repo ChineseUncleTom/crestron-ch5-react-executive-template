@@ -1,27 +1,38 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Crestron.SimplSharp;
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
-using Crestron.SimplSharpPro.Keypads;
 using System.Text.Json;
 
-namespace ConstrolSystemTemplate
+namespace ExecutiveControlSystem
 {
+    /// <summary>
+    /// Provides system information services: date/time updates and JSON
+    /// configuration loading from <c>Nvram/SystemConfig.json</c>.
+    /// </summary>
     internal class SystemInfo
     {
         private readonly BasicTriListWithSmartObject _panel;
         private CTimer _dateTimeTimer;
-        private RoomConfig config;
+        private RoomConfig _config;
+        private string _clockFormat = "12h";
 
         /// <summary>Gets the loaded room configuration.</summary>
-        public RoomConfig Config => config;
+        public RoomConfig Config => _config;
 
-        const string configFileName = "SystemConfig.json";
+        /// <summary>
+        /// Gets or sets the clock format used when sending the time string to the panel.
+        /// Accepted values are <c>"12h"</c> (default) and <c>"24h"</c>.
+        /// </summary>
+        public string ClockFormat
+        {
+            get => _clockFormat;
+            set => _clockFormat = value ?? "12h";
+        }
+
+        private const string ConfigFileName = "SystemConfig.json";
 
         /// <summary>
         /// Initializes a new instance of the SystemInfo class.
@@ -33,6 +44,7 @@ namespace ConstrolSystemTemplate
         }
 
         #region Data Models for JSON Configuration
+
         public class RoomConfig
         {
             public RoomInfo RoomInfo { get; set; }
@@ -52,6 +64,7 @@ namespace ConstrolSystemTemplate
             public List<IpDevice> Displays { get; set; }
             public List<IpDevice> Projectors { get; set; }
             public List<RoomVideoConfig> RoomVideoConfig { get; set; }
+            public HelpSupportInfo HelpSupport { get; set; }
         }
 
         public class RoomInfo
@@ -169,26 +182,27 @@ namespace ConstrolSystemTemplate
             public int DestIndex { get; set; }
             public bool IsLocal { get; set; }
         }
-        #endregion
-        
-        string JSONDataASString = "";
 
-        /// <summary>
-        /// Starts updating date and time to the panel every second.
-        /// </summary>
+        public class HelpSupportInfo
+        {
+            public string ItHelpdesk  { get; set; }
+            public string SupportEmail { get; set; }
+            public string QrLabel      { get; set; }
+        }
+
+        #endregion
+
+        // ── Date / Time ───────────────────────────────────────────────────────────
+
+        /// <summary>Starts updating date and time to the panel every second.</summary>
         public void StartDateTimeUpdates()
         {
-            // Update immediately
             UpdateDateTime();
-
-            // Create a timer that fires every 1000ms (1 second)
             _dateTimeTimer = new CTimer(DateTimeTimerCallback, null, 1000, 1000);
             CrestronConsole.PrintLine("[SystemInfo] Date/Time updates started");
         }
 
-        /// <summary>
-        /// Stops the date/time updates.
-        /// </summary>
+        /// <summary>Stops the date/time updates.</summary>
         public void StopDateTimeUpdates()
         {
             if (_dateTimeTimer != null)
@@ -200,32 +214,20 @@ namespace ConstrolSystemTemplate
             }
         }
 
-        /// <summary>
-        /// Timer callback that updates date and time.
-        /// </summary>
         private void DateTimeTimerCallback(object userSpecific)
         {
             UpdateDateTime();
         }
 
-        /// <summary>
-        /// Updates the date and time on the panel.
-        /// </summary>
+        /// <summary>Updates the date and time strings on the panel.</summary>
         public void UpdateDateTime()
         {
             try
             {
                 DateTime now = DateTime.Now;
-
-                // Format date (e.g., "Monday, January 15, 2024" or "01/15/2024")
-                string dateString = now.ToString("dddd, MMMM dd, yyyy");
-
-                // Format time (e.g., "02:30 PM" for 12-hour or "14:30" for 24-hour)
-                string timeString = now.ToString("hh:mm tt");
-
-                // Send to panel
-                _panel.StringInput[JoinMap.DATE_SERIAL].StringValue = dateString;
-                _panel.StringInput[JoinMap.TIME_SERIAL].StringValue = timeString;
+                string timeFormat = _clockFormat == "24h" ? "HH:mm" : "hh:mm tt";
+                _panel.StringInput[JoinMap.DATE_SERIAL].StringValue = now.ToString("dddd, MMMM dd, yyyy");
+                _panel.StringInput[JoinMap.TIME_SERIAL].StringValue = now.ToString(timeFormat);
             }
             catch (Exception ex)
             {
@@ -233,80 +235,65 @@ namespace ConstrolSystemTemplate
             }
         }
 
-        /// <summary>
-        /// Gets the current date as a formatted string.
-        /// </summary>
-        /// <returns>Formatted date string.</returns>
-        public string GetFormattedDate()
-        {
-            return DateTime.Now.ToString("dddd, MMMM dd, yyyy");
-        }
+        // ── JSON Config ───────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Gets the current time as a formatted string.
+        /// Loads <c>SystemConfig.json</c> from the Nvram directory, deserializes it,
+        /// and pushes room name / room number to the panel serial joins.
         /// </summary>
-        /// <returns>Formatted time string.</returns>
-        public string GetFormattedTime()
-        {
-            return DateTime.Now.ToString("hh:mm tt");
-        }
-
-        // TODO: read room name, room number, and other details from a json file in the root of the project
-
-        // Load configuration from a JSON file
         public void LoadSystemConfig()
-        { 
-            string configFilePath = Path.Combine(Directory.GetApplicationRootDirectory(), $"Nvram/{configFileName}");
+        {
+            string configFilePath = Path.Combine(
+                Directory.GetApplicationRootDirectory(),
+                $"Nvram/{ConfigFileName}");
 
-            if (File.Exists(configFilePath))
+            if (!File.Exists(configFilePath))
             {
-                CrestronConsole.PrintLine("[SystemInfo] Configuration file found: {0}", configFilePath);
+                CrestronConsole.PrintLine("[SystemInfo] Configuration file NOT found at: {0}", configFilePath);
+                return;
+            }
 
-                // Read and deserialize the JSON file
-                ReadJSON(configFilePath);
+            CrestronConsole.PrintLine("[SystemInfo] Configuration file found: {0}", configFilePath);
+            ReadJson(configFilePath);
 
-                // Check if config was successfully loaded
-                if (config != null && config.RoomInfo != null)
-                {
-                    _panel.StringInput[JoinMap.ROOM_NAME_SERIAL].StringValue = config.RoomInfo.Name ?? string.Empty;
-                    _panel.StringInput[JoinMap.ROOM_NUMBER_SERIAL].StringValue = config.RoomInfo.Number ?? string.Empty;
-
-                    CrestronConsole.PrintLine("[SystemInfo] Room Name: {0}", config.RoomInfo.Name);
-                    CrestronConsole.PrintLine("[SystemInfo] Room Number: {0}", config.RoomInfo.Number);
-                }
-                else
-                {
-                    CrestronConsole.PrintLine("[SystemInfo] Configuration loaded but RoomInfo is null");
-                }
+            if (_config?.RoomInfo != null)
+            {
+                _panel.StringInput[JoinMap.ROOM_NAME_SERIAL].StringValue   = _config.RoomInfo.Name   ?? string.Empty;
+                _panel.StringInput[JoinMap.ROOM_NUMBER_SERIAL].StringValue = _config.RoomInfo.Number ?? string.Empty;
+                CrestronConsole.PrintLine("[SystemInfo] Room: {0} ({1})", _config.RoomInfo.Name, _config.RoomInfo.Number);
             }
             else
-            { 
-                CrestronConsole.PrintLine("[SystemInfo] Configuration file NOT found at: {0}", configFilePath);
+            {
+                CrestronConsole.PrintLine("[SystemInfo] Config loaded but RoomInfo is null");
+            }
+
+            if (_config?.HelpSupport != null)
+            {
+                _panel.StringInput[JoinMap.HELP_IT_PHONE_SERIAL].StringValue      = _config.HelpSupport.ItHelpdesk   ?? string.Empty;
+                _panel.StringInput[JoinMap.HELP_SUPPORT_EMAIL_SERIAL].StringValue = _config.HelpSupport.SupportEmail ?? string.Empty;
+                _panel.StringInput[JoinMap.HELP_QR_LABEL_SERIAL].StringValue      = _config.HelpSupport.QrLabel      ?? string.Empty;
+                CrestronConsole.PrintLine("[SystemInfo] Help & Support info pushed to panel");
             }
         }
 
-        void ReadJSON(string filePath)
+        private void ReadJson(string filePath)
         {
             try
             {
-                using (StreamReader reader = new StreamReader(filePath, System.Text.Encoding.Default))
-                {
-                    JSONDataASString = reader.ReadToEnd();
-                }
+                string json;
+                using (var reader = new StreamReader(filePath, System.Text.Encoding.Default))
+                    json = reader.ReadToEnd();
 
-                CrestronConsole.PrintLine("[SystemInfo] JSON file read successfully. Length: {0} characters", JSONDataASString.Length);
+                CrestronConsole.PrintLine("[SystemInfo] JSON read OK ({0} chars)", json.Length);
+                _config = JsonSerializer.Deserialize<RoomConfig>(json);
 
-                config = JsonSerializer.Deserialize<RoomConfig>(JSONDataASString);
-
-                if (config != null)
-                {
-                    CrestronConsole.PrintLine("[SystemInfo] JSON deserialized successfully");
-                }
+                if (_config != null)
+                    CrestronConsole.PrintLine("[SystemInfo] JSON deserialized OK");
             }
             catch (Exception ex)
-            { 
-                CrestronConsole.PrintLine("[SystemInfo] Error reading JSON file: {0}", ex.Message);
-                ErrorLog.Error("[SystemInfo] Error reading JSON file: {0}", ex.Message);
+            {
+                CrestronConsole.PrintLine("[SystemInfo] Error reading JSON: {0}", ex.Message);
+                ErrorLog.Error("[SystemInfo] Error reading JSON: {0}", ex.Message);
             }
         }
     }

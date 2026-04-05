@@ -5,10 +5,10 @@ using Crestron.SimplSharpPro.CrestronThread;
 using Crestron.SimplSharpPro.DeviceSupport;
 using Crestron.SimplSharpPro.UI;
 
-namespace ConstrolSystemTemplate
+namespace ExecutiveControlSystem
 {
     /// <summary>
-    /// SIMPL# Pro entry point for the Crestron CH5 starter project.
+    /// SIMPL# Pro entry point for the Crestron CH5 Executive starter project.
     /// Registers the touch panel, wires join callbacks, and delegates
     /// all room logic to <see cref="RoomController"/>.
     /// </summary>
@@ -40,7 +40,7 @@ namespace ConstrolSystemTemplate
             {
                 // ── Register the touch panel ─────────────────────────────────────
                 _panel = new XpanelForHtml5(PANEL_IPID, this);
-                _panel.Description = "Main Room Panel";
+                _panel.Description = "Executive Room Panel";
 
                 // ── Wire join events ─────────────────────────────────────────────
                 _panel.SigChange += OnPanelSigChange;
@@ -97,8 +97,7 @@ namespace ConstrolSystemTemplate
                     break;
 
                 case eSigType.String:
-                    // Inbound serial from panel (uncommon but handled for completeness)
-                    CrestronConsole.PrintLine("[ControlSystem] Serial join {0} = \"{1}\"", sig.Number, sig.StringValue);
+                    HandleSerialJoin(sig);
                     break;
 
                 default:
@@ -108,7 +107,7 @@ namespace ConstrolSystemTemplate
 
         private void HandleDigitalJoin(Sig sig)
         {
-            uint joinNum = sig.Number;
+            uint joinNum  = sig.Number;
             bool isPressed = sig.BoolValue;
 
             // ── Audio source volume-up buttons (joins 59–63, hold – handle both edges) ──
@@ -136,26 +135,55 @@ namespace ConstrolSystemTemplate
             if (!isPressed)
                 return;
 
-            // ── Single button actions ────────────────────────────────────────────
+            // ── Executive scenario macros ────────────────────────────────────────
+
+            if (joinNum == JoinMap.SYSTEM_STARTUP_BTN)
+            {
+                _room.SystemStartup();
+                return;
+            }
+
+            if (joinNum == JoinMap.SYSTEM_OFF_BTN)
+            {
+                _room.ShutdownSystem();
+                return;
+            }
+
+            if (joinNum == JoinMap.PRESENT_TO_ROOM_BTN)
+            {
+                _room.PresentToRoom();
+                return;
+            }
+
+            // ── Lighting ─────────────────────────────────────────────────────────
+
             if (joinNum == JoinMap.LIGHT_TOGGLE)
             {
                 _room.LightsToggle();
                 return;
             }
 
+            // ── Teams / BYOD mode toggles ────────────────────────────────────────
+
             if (joinNum == JoinMap.TEAMS_MODE_BTN)
             {
-                // Handle Teams mode toggle
+                _room.TeamsModeToggle();
                 return;
             }
 
             if (joinNum == JoinMap.BYOD_MODE_BTN)
             {
-                // Handle BYOD mode toggle
+                _room.ByodModeToggle();
                 return;
             }
 
-            // ── Video source selection (joins 11-15) ─────────────────────────────
+            if (joinNum == JoinMap.BYOD_SELECT_BTN)
+            {
+                CrestronConsole.PrintLine("[ControlSystem] BYOD select");
+                return;
+            }
+
+            // ── Video source selection (joins 11–15) ─────────────────────────────
             if (joinNum >= JoinMap.VIDEO_SRC_SELECT_1 && joinNum <= JoinMap.VIDEO_SRC_SELECT_5)
             {
                 ushort sourceId = (ushort)(joinNum - JoinMap.VIDEO_SRC_SELECT_1 + 1);
@@ -163,7 +191,7 @@ namespace ConstrolSystemTemplate
                 return;
             }
 
-            // ── Video destination selection (joins 46-49) ────────────────────────
+            // ── Video destination selection (joins 46–49) ────────────────────────
             if (joinNum >= JoinMap.VIDEO_DEST_SELECT_1 && joinNum <= JoinMap.VIDEO_DEST_SELECT_4)
             {
                 ushort destId = (ushort)(joinNum - JoinMap.VIDEO_DEST_SELECT_1 + 1);
@@ -171,21 +199,19 @@ namespace ConstrolSystemTemplate
                 return;
             }
 
-            // ── Destination power buttons (joins 21-24) ──────────────────────────
+            // ── Destination power buttons (joins 21–24) ──────────────────────────
             if (joinNum >= JoinMap.VIDEO_DEST_POWER_BTN_1 && joinNum <= JoinMap.VIDEO_DEST_POWER_BTN_4)
             {
                 ushort destId = (ushort)(joinNum - JoinMap.VIDEO_DEST_POWER_BTN_1 + 1);
-                // TODO: Handle destination power toggle for destId
-                CrestronConsole.PrintLine("[ControlSystem] Destination {0} power toggle", destId);
+                _room.DestinationPowerToggle(destId);
                 return;
             }
 
-            // ── Destination video buttons (joins 31-34) ──────────────────────────
+            // ── Destination video buttons (joins 31–34) ──────────────────────────
             if (joinNum >= JoinMap.VIDEO_DEST_VIDEO_BTN_1 && joinNum <= JoinMap.VIDEO_DEST_VIDEO_BTN_4)
             {
                 ushort destId = (ushort)(joinNum - JoinMap.VIDEO_DEST_VIDEO_BTN_1 + 1);
-                // TODO: Handle destination video toggle for destId
-                CrestronConsole.PrintLine("[ControlSystem] Destination {0} video toggle", destId);
+                _room.DestinationVideoToggle(destId);
                 return;
             }
 
@@ -222,18 +248,6 @@ namespace ConstrolSystemTemplate
                 return;
             }
 
-            if (joinNum == JoinMap.MASTER_VOL_MUTE_BTN)
-            {
-                _room.AudioMasterVolMuteToggle();
-                return;
-            }
-
-            if (joinNum == JoinMap.MASTER_VOL_DEFAULT_BTN)
-            {
-                _room.AudioMasterVolDefault();
-                return;
-            }
-
             // ── Camera power / tracking toggle (joins 96–97) ─────────────────────
             if (joinNum == JoinMap.CAM_POWER_BTN)
             {
@@ -261,6 +275,39 @@ namespace ConstrolSystemTemplate
                 return;
             }
 
+            // ── User settings – reset / BYOD toggles (joins 133–137) ────────────
+            if (joinNum == JoinMap.SETTINGS_RESET_BTN)
+            {
+                _room.SettingsReset();
+                return;
+            }
+
+            if (joinNum == JoinMap.SETTINGS_BYOD_AUTO_SWITCH_BTN)
+            {
+                _room.SettingsByodAutoSwitchToggle();
+                return;
+            }
+
+            if (joinNum == JoinMap.SETTINGS_BYOD_AUTO_POWER_BTN)
+            {
+                _room.SettingsByodAutoPowerToggle();
+                return;
+            }
+
+            // ── Unhandled join ───────────────────────────────────────────────────
+            // ── Master volume default / mute (joins 130–131) ─────────────────────
+            if (joinNum == JoinMap.MASTER_VOL_DEFAULT_BTN)
+            {
+                _room.MasterVolDefault();
+                return;
+            }
+
+            if (joinNum == JoinMap.MASTER_VOL_MUTE_BTN)
+            {
+                _room.MasterVolMuteToggle();
+                return;
+            }
+
             // ── Unhandled join ───────────────────────────────────────────────────
             CrestronConsole.PrintLine("[ControlSystem] Unhandled digital join {0}", joinNum);
         }
@@ -284,6 +331,9 @@ namespace ConstrolSystemTemplate
                 case JoinMap.VOLUME_SET:
                     _room.SetVolume(sig.UShortValue);
                     break;
+                case JoinMap.SETTINGS_STARTUP_VOL_SET:
+                    _room.SettingsStartupVolume(sig.UShortValue);
+                    break;
                 case JoinMap.CAM_ZOOM_SPEED_SET:
                     _room.CameraZoomSpeed(sig.UShortValue);
                     break;
@@ -293,6 +343,31 @@ namespace ConstrolSystemTemplate
 
                 default:
                     CrestronConsole.PrintLine("[ControlSystem] Unhandled analog join {0}", joinNum);
+                    break;
+            }
+        }
+
+        private void HandleSerialJoin(Sig sig)
+        {
+            uint   joinNum = sig.Number;
+            string value   = sig.StringValue ?? string.Empty;
+
+            switch (joinNum)
+            {
+                case JoinMap.SETTINGS_THEME_MODE:
+                    _room.SettingsThemeMode(value);
+                    break;
+                case JoinMap.SETTINGS_BRAND_COLOR:
+                    _room.SettingsBrandColor(value);
+                    break;
+                case JoinMap.SETTINGS_CLOCK_FORMAT:
+                    _room.SettingsClockFormat(value);
+                    break;
+                case JoinMap.SETTINGS_TEMP_UNIT:
+                    _room.SettingsTempUnit(value);
+                    break;
+                default:
+                    CrestronConsole.PrintLine("[ControlSystem] Serial join {0} = \"{1}\"", joinNum, value);
                     break;
             }
         }

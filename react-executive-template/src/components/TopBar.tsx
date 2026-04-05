@@ -7,41 +7,8 @@ interface TopBarProps {
   title: string;
 }
 
-/**
- * Converts a time string received from the control system to the requested
- * display format.
- *
- * @param raw         - Raw time string from the processor, expected as
- *                      "HH:MM", "HH:MM:SS" (24-hour), or "H:MM AM/PM".
- * @param clockFormat - Desired output format: "12h" or "24h".
- * @returns The formatted time string, or `raw` unchanged if it cannot be
- *          parsed (so the original value is always preserved as a fallback).
- */
-function formatTime(raw: string, clockFormat: string): string {
-  if (!raw) return raw;
-  const match = raw.match(/^(\d{1,2}):(\d{2})(:\d{2})?(\s*[AaPp][Mm])?$/);
-  if (!match) return raw;
-
-  let hours = parseInt(match[1], 10);
-  const minutes = match[2];
-  const suffix = (match[4] || '').trim().toUpperCase();
-
-  // Normalize to 24-hour value first
-  if (suffix === 'PM' && hours !== 12) hours += 12;
-  if (suffix === 'AM' && hours === 12) hours = 0;
-
-  if (clockFormat === '24h') {
-    return `${String(hours).padStart(2, '0')}:${minutes}`;
-  }
-
-  // 12-hour format
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const h12 = hours % 12 || 12;
-  return `${h12}:${minutes} ${period}`;
-}
-
 /** AV Help modal — shown when the AV Help button is pressed. */
-const AVHelpModal: React.FC<{ onClose: () => void; itPhone: string; supportEmail: string }> = ({ onClose, itPhone, supportEmail }) => {
+const AVHelpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const backdropRef = useRef<HTMLDivElement>(null);
 
   const handleBackdropClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -116,13 +83,13 @@ const AVHelpModal: React.FC<{ onClose: () => void; itPhone: string; supportEmail
           <section className="av-help-modal__section">
             <h3 className="av-help-modal__section-title">Contact AV Support</h3>
             <div className="av-help-modal__contact-list">
-              <a className="av-help-modal__contact-item" href={`tel:${itPhone || '+15550100'}`}>
+              <a className="av-help-modal__contact-item" href="tel:+15550100">
                 <PhoneIcon size={15} aria-hidden="true" />
-                <span>{itPhone || '+1 (555) 010-0100'}</span>
+                <span>+1 (555) 010-0100</span>
               </a>
-              <a className="av-help-modal__contact-item" href={`mailto:${supportEmail || 'av-support@example.com'}`}>
+              <a className="av-help-modal__contact-item" href="mailto:av-support@example.com">
                 <Mail size={15} aria-hidden="true" />
-                <span>{supportEmail || 'av-support@example.com'}</span>
+                <span>av-support@example.com</span>
               </a>
             </div>
           </section>
@@ -148,19 +115,13 @@ const AVHelpModal: React.FC<{ onClose: () => void; itPhone: string; supportEmail
  * - Right:  room name / number and an AV Help button.
  */
 const TopBar: React.FC<TopBarProps> = ({ title }) => {
-  const date        = useSerialJoin(Joins.DATE_SERIAL);
-  const timeRaw     = useSerialJoin(Joins.TIME_SERIAL);
-  const label       = useSerialJoin(Joins.LABEL_SERIAL);
-  const roomName    = useSerialJoin(Joins.ROOM_NAME_SERIAL);
-  const roomNumber  = useSerialJoin(Joins.ROOM_NUMBER_SERIAL);
-  const inMeeting   = useDigitalJoin(Joins.TEAMS_MODE_FB);
-  const byodActive  = useDigitalJoin(Joins.BYOD_MODE_FB);
-  const clockFormat = useSerialJoin(Joins.SETTINGS_CLOCK_FORMAT);
-  const itPhone     = useSerialJoin(Joins.HELP_IT_PHONE_SERIAL);
-  const supportEmail = useSerialJoin(Joins.HELP_SUPPORT_EMAIL_SERIAL);
-
-  // Apply clock format preference to the raw time string from the processor
-  const time = formatTime(timeRaw, clockFormat || '12h');
+  const date       = useSerialJoin(Joins.DATE_SERIAL);
+  const time       = useSerialJoin(Joins.TIME_SERIAL);
+  const label      = useSerialJoin(Joins.LABEL_SERIAL);
+  const roomName   = useSerialJoin(Joins.ROOM_NAME_SERIAL);
+  const roomNumber = useSerialJoin(Joins.ROOM_NUMBER_SERIAL);
+  const inMeeting  = useDigitalJoin(Joins.TEAMS_MODE_FB);
+  const byodActive = useDigitalJoin(Joins.BYOD_MODE_FB);
 
   const [showHelp, setShowHelp] = useState(false);
 
@@ -207,7 +168,7 @@ const TopBar: React.FC<TopBarProps> = ({ title }) => {
         </div>
       </header>
 
-      {showHelp && <AVHelpModal onClose={() => setShowHelp(false)} itPhone={itPhone} supportEmail={supportEmail} />}
+      {showHelp && <AVHelpModal onClose={() => setShowHelp(false)} />}
     </>
   );
 };

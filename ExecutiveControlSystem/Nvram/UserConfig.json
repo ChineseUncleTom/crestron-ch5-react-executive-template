@@ -1,0 +1,9 @@
+{
+    "ThemeMode": "dark",
+    "BrandColor": "#3b82f6",
+    "ByodAutoSwitch": true,
+    "ByodAutoPowerOn": false,
+    "StartupVolume": 30,
+    "ClockFormat": "12h",
+    "TempUnit": "F"
+}

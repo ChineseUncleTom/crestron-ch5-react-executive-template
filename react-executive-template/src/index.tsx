@@ -23,11 +23,6 @@ const xPanelConfig = {
 
 if (isActive) {
   WebXPanel.initialize(xPanelConfig);
-  // Broadcast WebXPanel connection state changes as window-level CustomEvents
-  // so that the useWebXPanelOnline hook in useCrestron.ts can subscribe
-  // without needing a second import of this package.
-  WebXPanel.addEventListener('connect',    () => window.dispatchEvent(new CustomEvent('ch5:connect')));
-  WebXPanel.addEventListener('disconnect', () => window.dispatchEvent(new CustomEvent('ch5:disconnect')));
 }
 
 const root = ReactDOM.createRoot(

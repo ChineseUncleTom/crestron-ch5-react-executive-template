@@ -26,7 +26,7 @@ export const Joins = {
   LIGHT_TOGGLE: 4,
 
   // Digital – executive scenario macros (joins 5, 8–10)
-  SYSTEM_ON_FB: 5,          // feedback from processor – room is currently powered on (high = on)
+  SYSTEM_OFF_FB: 5,         // feedback from processor – room is currently powered on (high = on)
   SYSTEM_STARTUP_BTN: 8,
   SYSTEM_OFF_BTN: 9,
   PRESENT_TO_ROOM_BTN: 10,
@@ -45,71 +45,41 @@ export const Joins = {
   VIDEO_SRC_ACTIVE_4: 19,
   VIDEO_SRC_ACTIVE_5: 20,
 
-  // Digital – destination select (output: joins 46–49, 138–142)
+  // Digital – destination select (output: joins 46–49)
   VIDEO_DEST_SELECT_1: 46,
   VIDEO_DEST_SELECT_2: 47,
   VIDEO_DEST_SELECT_3: 48,
   VIDEO_DEST_SELECT_4: 49,
-  VIDEO_DEST_SELECT_5: 138,
-  VIDEO_DEST_SELECT_6: 139,
-  VIDEO_DEST_SELECT_7: 140,
-  VIDEO_DEST_SELECT_8: 141,
-  VIDEO_DEST_SELECT_9: 142,
 
-  // Digital – destination active feedback (from processor: joins 50–53, 143–147)
+  // Digital – destination active feedback (from processor: joins 50–53)
   VIDEO_DEST_ACTIVE_1: 50,
   VIDEO_DEST_ACTIVE_2: 51,
   VIDEO_DEST_ACTIVE_3: 52,
   VIDEO_DEST_ACTIVE_4: 53,
-  VIDEO_DEST_ACTIVE_5: 143,
-  VIDEO_DEST_ACTIVE_6: 144,
-  VIDEO_DEST_ACTIVE_7: 145,
-  VIDEO_DEST_ACTIVE_8: 146,
-  VIDEO_DEST_ACTIVE_9: 147,
 
-  // Digital – destination power toggle (output: joins 21–24, 148–152)
+  // Digital – destination power toggle (output: joins 21–24)
   VIDEO_DEST_POWER_BTN_1: 21,
   VIDEO_DEST_POWER_BTN_2: 22,
   VIDEO_DEST_POWER_BTN_3: 23,
   VIDEO_DEST_POWER_BTN_4: 24,
-  VIDEO_DEST_POWER_BTN_5: 148,
-  VIDEO_DEST_POWER_BTN_6: 149,
-  VIDEO_DEST_POWER_BTN_7: 150,
-  VIDEO_DEST_POWER_BTN_8: 151,
-  VIDEO_DEST_POWER_BTN_9: 152,
 
-  // Digital – destination power feedback (from processor: joins 25–28, 153–157)
+  // Digital – destination power feedback (from processor: joins 25–28)
   VIDEO_DEST_POWER_FB_1: 25,
   VIDEO_DEST_POWER_FB_2: 26,
   VIDEO_DEST_POWER_FB_3: 27,
   VIDEO_DEST_POWER_FB_4: 28,
-  VIDEO_DEST_POWER_FB_5: 153,
-  VIDEO_DEST_POWER_FB_6: 154,
-  VIDEO_DEST_POWER_FB_7: 155,
-  VIDEO_DEST_POWER_FB_8: 156,
-  VIDEO_DEST_POWER_FB_9: 157,
 
-  // Digital – destination video toggle (output: joins 31–34, 158–162)
+  // Digital – destination video toggle (output: joins 31–34)
   VIDEO_DEST_VIDEO_BTN_1: 31,
   VIDEO_DEST_VIDEO_BTN_2: 32,
   VIDEO_DEST_VIDEO_BTN_3: 33,
   VIDEO_DEST_VIDEO_BTN_4: 34,
-  VIDEO_DEST_VIDEO_BTN_5: 158,
-  VIDEO_DEST_VIDEO_BTN_6: 159,
-  VIDEO_DEST_VIDEO_BTN_7: 160,
-  VIDEO_DEST_VIDEO_BTN_8: 161,
-  VIDEO_DEST_VIDEO_BTN_9: 162,
 
-  // Digital – destination video feedback (from processor: joins 35–38, 163–167)
+  // Digital – destination video feedback (from processor: joins 35–38)
   VIDEO_DEST_VIDEO_FB_1: 35,
   VIDEO_DEST_VIDEO_FB_2: 36,
   VIDEO_DEST_VIDEO_FB_3: 37,
   VIDEO_DEST_VIDEO_FB_4: 38,
-  VIDEO_DEST_VIDEO_FB_5: 163,
-  VIDEO_DEST_VIDEO_FB_6: 164,
-  VIDEO_DEST_VIDEO_FB_7: 165,
-  VIDEO_DEST_VIDEO_FB_8: 166,
-  VIDEO_DEST_VIDEO_FB_9: 167,
 
   // Digital – Teams / BYOD mode (joins 41–45)
   TEAMS_MODE_BTN: 41,
@@ -221,25 +191,15 @@ export const Joins = {
   VIDEO_SRC_NAME_4: 14,
   VIDEO_SRC_NAME_5: 15,
 
-  // Serial – destination names (joins 21–24, 61–65) and currently-routed source names (joins 25–28, 66–70)
+  // Serial – destination names (joins 21–24) and currently-routed source names (joins 25–28)
   VIDEO_DEST_NAME_1: 21,
   VIDEO_DEST_NAME_2: 22,
   VIDEO_DEST_NAME_3: 23,
   VIDEO_DEST_NAME_4: 24,
-  VIDEO_DEST_NAME_5: 61,
-  VIDEO_DEST_NAME_6: 62,
-  VIDEO_DEST_NAME_7: 63,
-  VIDEO_DEST_NAME_8: 64,
-  VIDEO_DEST_NAME_9: 65,
   VIDEO_DEST_ROUTED_SRC_NAME_1: 25,
   VIDEO_DEST_ROUTED_SRC_NAME_2: 26,
   VIDEO_DEST_ROUTED_SRC_NAME_3: 27,
   VIDEO_DEST_ROUTED_SRC_NAME_4: 28,
-  VIDEO_DEST_ROUTED_SRC_NAME_5: 66,
-  VIDEO_DEST_ROUTED_SRC_NAME_6: 67,
-  VIDEO_DEST_ROUTED_SRC_NAME_7: 68,
-  VIDEO_DEST_ROUTED_SRC_NAME_8: 69,
-  VIDEO_DEST_ROUTED_SRC_NAME_9: 70,
 
   // Serial – audio source names (joins 29–33)
   AUDIO_SRC_NAME_1: 29,
@@ -442,30 +402,4 @@ export function useSendSerial(joinNumber: number): (value: string) => void {
     },
     [joinNumber],
   );
-}
-
-/**
- * Returns true while the CH5 WebXPanel WebSocket session is connected to the
- * Crestron control system.  Listens for 'ch5:connect' / 'ch5:disconnect'
- * CustomEvents dispatched on the window by index.tsx (which owns the
- * WebXPanel lifecycle), so no second import of @crestron/ch5-webxpanel is
- * needed here.
- */
-export function useWebXPanelOnline(): boolean {
-  const [isOnline, setIsOnline] = useState(false);
-
-  useEffect(() => {
-    const onConnect    = () => setIsOnline(true);
-    const onDisconnect = () => setIsOnline(false);
-
-    window.addEventListener('ch5:connect',    onConnect);
-    window.addEventListener('ch5:disconnect', onDisconnect);
-
-    return () => {
-      window.removeEventListener('ch5:connect',    onConnect);
-      window.removeEventListener('ch5:disconnect', onDisconnect);
-    };
-  }, []);
-
-  return isOnline;
 }

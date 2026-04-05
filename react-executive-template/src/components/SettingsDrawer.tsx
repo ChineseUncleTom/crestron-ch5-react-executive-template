@@ -31,7 +31,6 @@ import {
   useSendAnalog,
   useSendSerial,
   useSendDigitalPulse,
-  useWebXPanelOnline,
   Joins,
 } from '../hooks/useCrestron';
 
@@ -248,10 +247,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   }, [sendBrandColor]);
 
   /* ── BYOD state ─────────────────────────────────────────────────────────── */
-  const byodModeFb            = useDigitalJoin(Joins.BYOD_MODE_FB);
   const byodAutoSwitchFb  = useDigitalJoin(Joins.SETTINGS_BYOD_AUTO_SWITCH_FB);
   const byodAutoPowerOnFb = useDigitalJoin(Joins.SETTINGS_BYOD_AUTO_POWER_FB);
-  const sendByodModeToggle        = useSendDigitalPulse(Joins.BYOD_MODE_BTN);
   const sendByodAutoSwitchToggle  = useSendDigitalPulse(Joins.SETTINGS_BYOD_AUTO_SWITCH_BTN);
   const sendByodAutoPowerToggle   = useSendDigitalPulse(Joins.SETTINGS_BYOD_AUTO_POWER_BTN);
 
@@ -322,11 +319,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
 
   /* ── CH5 joins (read-only for diagnostics display) ──────────────────────── */
   /**
-   * useWebXPanelOnline() subscribes to the WebXPanel 'connect' / 'disconnect'
-   * events from @crestron/ch5-webxpanel so the diagnostics row shows the real
-   * WebSocket session state rather than a control-system feedback join proxy.
+   * SYSTEM_OFF_FB (join 5) is used here as a proxy for the CH5 WebSocket
+   * connection health: it carries a non-zero value only after the processor has
+   * established a session and sent at least one feedback signal.  A dedicated
+   * WS_CONNECTED serial/digital join would be more semantically correct but is
+   * not yet defined in the current JoinMap.
    */
-  const ch5Connected  = useWebXPanelOnline();
+  const ch5Connected  = useDigitalJoin(Joins.SYSTEM_OFF_FB);  // proxy for WS health
   const roomName      = useSerialJoin(Joins.ROOM_NAME_SERIAL);
 
   /* ── Apply theme to document root ──────────────────────────────────────── */
@@ -511,13 +510,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
             <SectionHeader icon={<Usb size={16} />} title="BYOD Behavior" />
             <div id="settings-byod-title" className="sr-only">BYOD Behavior</div>
 
-            <ToggleRow
-              id="byod-mode"
-              label="BYOD Mode"
-              description="Activate BYOD mode – routes connected device to the room displays"
-              checked={byodModeFb}
-              onChange={sendByodModeToggle}
-            />
             <ToggleRow
               id="byod-auto-switch"
               label="Auto-Switch on Connect"

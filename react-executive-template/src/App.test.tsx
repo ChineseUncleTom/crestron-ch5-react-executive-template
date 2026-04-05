@@ -22,7 +22,7 @@ describe('App – HomeView (default landing page)', () => {
     render(<App />);
     expect(screen.getByRole('button', { name: 'Present to Room' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Video Conference' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /system on/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'System Off' })).toBeInTheDocument();
   });
 
   it('renders the microphone quick-access button', () => {

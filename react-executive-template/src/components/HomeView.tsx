@@ -20,8 +20,8 @@ import {
  * - "Present to Room"  – pulses PRESENT_TO_ROOM_BTN (join 10); the control
  *   system routes the local PC to all displays and powers them on.
  * - "Video Conference" – pulses TEAMS_MODE_BTN (join 41) to enter Teams mode.
- * - "System Off/On"    – when room is on (SYSTEM_ON_FB high): hold for 5 s
- *   to pulse SYSTEM_OFF_BTN (join 9). When room is off (SYSTEM_ON_FB low):
+ * - "System Off/On"    – when room is on (SYSTEM_OFF_FB high): hold for 5 s
+ *   to pulse SYSTEM_OFF_BTN (join 9). When room is off (SYSTEM_OFF_FB low):
  *   single press pulses SYSTEM_STARTUP_BTN (join 8).
  */
 const HOLD_DURATION_MS = 5000;
@@ -33,7 +33,7 @@ const HomeView: React.FC = () => {
   const privacyMuted = useDigitalJoin(Joins.AUDIO_PRIVACY_MUTE_FB);
   const masterVolFb  = useAnalogJoin(Joins.VOLUME_FB);
   // HIGH = room is currently powered on; LOW = room is off
-  const roomIsOn = useDigitalJoin(Joins.SYSTEM_ON_FB);
+  const roomIsOn = useDigitalJoin(Joins.SYSTEM_OFF_FB);
 
   const sendPresentToRoom   = useSendDigitalPulse(Joins.PRESENT_TO_ROOM_BTN);
   const sendVideoConference = useSendDigitalPulse(Joins.TEAMS_MODE_BTN);

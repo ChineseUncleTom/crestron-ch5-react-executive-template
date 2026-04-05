@@ -1,4 +1,4 @@
-namespace ConstrolSystemTemplate
+namespace ExecutiveControlSystem
 {
     /// <summary>
     /// Centralised join number constants shared by ControlSystem and RoomController.
@@ -7,19 +7,21 @@ namespace ConstrolSystemTemplate
     public static class JoinMap
     {
         // ── Digital joins ────────────────────────────────────────────────────────
+
         /// <summary>Panel button – turn lights on.</summary>
         public const uint LIGHT_ON = 1;
 
         /// <summary>Panel button – turn lights off.</summary>
         public const uint LIGHT_OFF = 2;
 
-        /// <summary>Panel button – toggle lights.</summary>
-        public const uint LIGHT_TOGGLE = 4;
-
         /// <summary>Feedback to panel – lights are currently on.</summary>
         public const uint LIGHT_IS_ON = 3;
 
+        /// <summary>Panel button – toggle lights.</summary>
+        public const uint LIGHT_TOGGLE = 4;
+
         // ── Digital – executive scenario macros (joins 5, 8–10) ─────────────────
+
         /// <summary>Feedback to panel – room is currently powered on (high = on, low = off).</summary>
         public const uint SYSTEM_OFF_FB = 5;
 
@@ -210,22 +212,119 @@ namespace ConstrolSystemTemplate
         /// <summary>Feedback to panel – ceiling microphone mute is active.</summary>
         public const uint AUDIO_CEILING_MIC_MUTE_FB = 89;
 
-        // ── Master volume default / mute (joins 130–132) ─────────────────────────
-        /// <summary>Panel button – reset master volume to default level.</summary>
+        // ── Digital – camera pan / tilt / zoom buttons (output: joins 90–95) ──────
+        /// <summary>Panel button (hold) – pan camera left.</summary>
+        public const uint CAM_PAN_LEFT_BTN = 90;
+        /// <summary>Panel button (hold) – pan camera right.</summary>
+        public const uint CAM_PAN_RIGHT_BTN = 91;
+        /// <summary>Panel button (hold) – tilt camera up.</summary>
+        public const uint CAM_TILT_UP_BTN = 92;
+        /// <summary>Panel button (hold) – tilt camera down.</summary>
+        public const uint CAM_TILT_DOWN_BTN = 93;
+        /// <summary>Panel button (hold) – zoom camera in.</summary>
+        public const uint CAM_ZOOM_IN_BTN = 94;
+        /// <summary>Panel button (hold) – zoom camera out.</summary>
+        public const uint CAM_ZOOM_OUT_BTN = 95;
+
+        // ── Digital – camera power / tracking toggle buttons (output: joins 96–97) ─
+        /// <summary>Panel button – toggle camera power.</summary>
+        public const uint CAM_POWER_BTN = 96;
+        /// <summary>Panel button – toggle camera auto-tracking.</summary>
+        public const uint CAM_TRACKING_BTN = 97;
+
+        // ── Digital – camera preset recall buttons (output: joins 98–107) ──────────
+        /// <summary>Panel button – recall camera preset 1.</summary>
+        public const uint CAM_PRESET_1 = 98;
+        /// <summary>Panel button – recall camera preset 2.</summary>
+        public const uint CAM_PRESET_2 = 99;
+        /// <summary>Panel button – recall camera preset 3.</summary>
+        public const uint CAM_PRESET_3 = 100;
+        /// <summary>Panel button – recall camera preset 4.</summary>
+        public const uint CAM_PRESET_4 = 101;
+        /// <summary>Panel button – recall camera preset 5.</summary>
+        public const uint CAM_PRESET_5 = 102;
+        /// <summary>Panel button – recall camera preset 6.</summary>
+        public const uint CAM_PRESET_6 = 103;
+        /// <summary>Panel button – recall camera preset 7.</summary>
+        public const uint CAM_PRESET_7 = 104;
+        /// <summary>Panel button – recall camera preset 8.</summary>
+        public const uint CAM_PRESET_8 = 105;
+        /// <summary>Panel button – recall camera preset 9.</summary>
+        public const uint CAM_PRESET_9 = 106;
+        /// <summary>Panel button – recall camera preset 10.</summary>
+        public const uint CAM_PRESET_10 = 107;
+
+        // ── Digital – camera select buttons (output: joins 108–117) ─────────────────
+        /// <summary>Panel button – select camera 1.</summary>
+        public const uint CAM_SELECT_1 = 108;
+        /// <summary>Panel button – select camera 2.</summary>
+        public const uint CAM_SELECT_2 = 109;
+        /// <summary>Panel button – select camera 3.</summary>
+        public const uint CAM_SELECT_3 = 110;
+        /// <summary>Panel button – select camera 4.</summary>
+        public const uint CAM_SELECT_4 = 111;
+        /// <summary>Panel button – select camera 5.</summary>
+        public const uint CAM_SELECT_5 = 112;
+        /// <summary>Panel button – select camera 6.</summary>
+        public const uint CAM_SELECT_6 = 113;
+        /// <summary>Panel button – select camera 7.</summary>
+        public const uint CAM_SELECT_7 = 114;
+        /// <summary>Panel button – select camera 8.</summary>
+        public const uint CAM_SELECT_8 = 115;
+        /// <summary>Panel button – select camera 9.</summary>
+        public const uint CAM_SELECT_9 = 116;
+        /// <summary>Panel button – select camera 10.</summary>
+        public const uint CAM_SELECT_10 = 117;
+
+        // ── Digital – camera power / tracking feedback (from processor: joins 118–119) ─
+        /// <summary>Feedback to panel – camera power is on.</summary>
+        public const uint CAM_POWER_FB = 118;
+        /// <summary>Feedback to panel – camera auto-tracking is active.</summary>
+        public const uint CAM_TRACKING_FB = 119;
+
+        // ── Digital – camera active feedback (from processor: joins 120–129) ─────────
+        /// <summary>Feedback to panel – camera 1 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_1 = 120;
+        /// <summary>Feedback to panel – camera 2 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_2 = 121;
+        /// <summary>Feedback to panel – camera 3 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_3 = 122;
+        /// <summary>Feedback to panel – camera 4 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_4 = 123;
+        /// <summary>Feedback to panel – camera 5 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_5 = 124;
+        /// <summary>Feedback to panel – camera 6 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_6 = 125;
+        /// <summary>Feedback to panel – camera 7 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_7 = 126;
+        /// <summary>Feedback to panel – camera 8 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_8 = 127;
+        /// <summary>Feedback to panel – camera 9 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_9 = 128;
+        /// <summary>Feedback to panel – camera 10 is selected.</summary>
+        public const uint CAM_ACTIVE_FB_10 = 129;
+
+        // ── Digital – master volume default / mute (joins 130–132) ───────────────
+        /// <summary>Button from panel – restore master volume to default level.</summary>
         public const uint MASTER_VOL_DEFAULT_BTN = 130;
-        /// <summary>Panel button – toggle master volume mute.</summary>
+
+        /// <summary>Button from panel – toggle master volume mute on/off.</summary>
         public const uint MASTER_VOL_MUTE_BTN = 131;
-        /// <summary>Processor feedback – master volume mute state.</summary>
+
+        /// <summary>Feedback to panel – master volume is currently muted.</summary>
         public const uint MASTER_VOL_MUTE_FB = 132;
 
         // ── Analog joins ─────────────────────────────────────────────────────────
-        /// <summary>Panel slider – set volume level (0–65 535).</summary>
+        /// <summary>Panel slider – set master volume level (0–65 535).</summary>
         public const uint VOLUME_SET = 1;
 
-        /// <summary>Feedback to panel – current volume level (0–65 535).</summary>
+        /// <summary>Feedback to panel – current master volume level (0–65 535).</summary>
         public const uint VOLUME_FB = 2;
 
+        /// <summary>Panel slider – set display brightness (0–65 535).</summary>
         public const uint BRIGHTNESS_SET = 3;
+
+        /// <summary>Feedback to panel – current display brightness (0–65 535).</summary>
         public const uint BRIGHTNESS_FB = 4;
 
         // ── Analog – audio source volume level set (joins 5–9) ───────────────────
@@ -252,12 +351,20 @@ namespace ConstrolSystemTemplate
         /// <summary>Feedback to panel – current volume level for audio source 5 (0–65 535).</summary>
         public const uint AUDIO_SRC_VOL_FB_5 = 14;
 
+        // ── Analog – camera zoom speed (join 15 set, join 16 feedback) ──────────────
+        /// <summary>Panel slider – set camera zoom speed (0–65 535).</summary>
+        public const uint CAM_ZOOM_SPEED_SET = 15;
+        /// <summary>Feedback to panel – current camera zoom speed (0–65 535).</summary>
+        public const uint CAM_ZOOM_SPEED_FB = 16;
+
+        // ── Analog – camera moment speed (join 17 set, join 18 feedback) ────────────
+        /// <summary>Panel slider – set camera moment (pan/tilt) speed (0–65 535).</summary>
+        public const uint CAM_MOMENT_SPEED_SET = 17;
+        /// <summary>Feedback to panel – current camera moment speed (0–65 535).</summary>
+        public const uint CAM_MOMENT_SPEED_FB = 18;
+
         // ── Serial joins ─────────────────────────────────────────────────────────
-        /// <summary>
-        /// Feedback to panel – name of the currently selected source (legacy, single-source panels).
-        /// For multi-source video routing panels use VIDEO_SRC_NAME_1–5 for source names
-        /// and VIDEO_DEST_ROUTED_SRC_NAME_1–4 for the source currently routed to each destination.
-        /// </summary>
+        /// <summary>Feedback to panel – legacy single source name.</summary>
         public const uint SOURCE_NAME = 1;
 
         /// <summary>Feedback to panel – current date string.</summary>
@@ -370,108 +477,40 @@ namespace ConstrolSystemTemplate
             CAM_PRESET_NAME_6, CAM_PRESET_NAME_7, CAM_PRESET_NAME_8, CAM_PRESET_NAME_9, CAM_PRESET_NAME_10,
         };
 
-        // ── Digital – camera pan / tilt / zoom buttons (output: joins 90–95) ──────
-        /// <summary>Panel button (hold) – pan camera left.</summary>
-        public const uint CAM_PAN_LEFT_BTN = 90;
-        /// <summary>Panel button (hold) – pan camera right.</summary>
-        public const uint CAM_PAN_RIGHT_BTN = 91;
-        /// <summary>Panel button (hold) – tilt camera up.</summary>
-        public const uint CAM_TILT_UP_BTN = 92;
-        /// <summary>Panel button (hold) – tilt camera down.</summary>
-        public const uint CAM_TILT_DOWN_BTN = 93;
-        /// <summary>Panel button (hold) – zoom camera in.</summary>
-        public const uint CAM_ZOOM_IN_BTN = 94;
-        /// <summary>Panel button (hold) – zoom camera out.</summary>
-        public const uint CAM_ZOOM_OUT_BTN = 95;
+        // ── Serial – Help & Support info from SystemConfig (joins 54–56) ────────
+        /// <summary>Feedback to panel – IT helpdesk phone number (from SystemConfig).</summary>
+        public const uint HELP_IT_PHONE_SERIAL = 54;
+        /// <summary>Feedback to panel – AV support email address (from SystemConfig).</summary>
+        public const uint HELP_SUPPORT_EMAIL_SERIAL = 55;
+        /// <summary>Feedback to panel – QR code label text (from SystemConfig).</summary>
+        public const uint HELP_QR_LABEL_SERIAL = 56;
 
-        // ── Digital – camera power / tracking toggle buttons (output: joins 96–97) ─
-        /// <summary>Panel button – toggle camera power.</summary>
-        public const uint CAM_POWER_BTN = 96;
-        /// <summary>Panel button – toggle camera auto-tracking.</summary>
-        public const uint CAM_TRACKING_BTN = 97;
+        // ── Serial – User settings (joins 57–60, bidirectional) ─────────────────
+        /// <summary>Bidirectional – UI theme mode ("dark" / "light" / "high-contrast").</summary>
+        public const uint SETTINGS_THEME_MODE = 57;
+        /// <summary>Bidirectional – brand accent colour hex string (e.g. "#3b82f6").</summary>
+        public const uint SETTINGS_BRAND_COLOR = 58;
+        /// <summary>Bidirectional – clock format ("12h" / "24h").</summary>
+        public const uint SETTINGS_CLOCK_FORMAT = 59;
+        /// <summary>Bidirectional – temperature unit ("F" / "C").</summary>
+        public const uint SETTINGS_TEMP_UNIT = 60;
 
-        // ── Digital – camera preset recall buttons (output: joins 98–107) ──────────
-        /// <summary>Panel button – recall camera preset 1.</summary>
-        public const uint CAM_PRESET_1 = 98;
-        /// <summary>Panel button – recall camera preset 2.</summary>
-        public const uint CAM_PRESET_2 = 99;
-        /// <summary>Panel button – recall camera preset 3.</summary>
-        public const uint CAM_PRESET_3 = 100;
-        /// <summary>Panel button – recall camera preset 4.</summary>
-        public const uint CAM_PRESET_4 = 101;
-        /// <summary>Panel button – recall camera preset 5.</summary>
-        public const uint CAM_PRESET_5 = 102;
-        /// <summary>Panel button – recall camera preset 6.</summary>
-        public const uint CAM_PRESET_6 = 103;
-        /// <summary>Panel button – recall camera preset 7.</summary>
-        public const uint CAM_PRESET_7 = 104;
-        /// <summary>Panel button – recall camera preset 8.</summary>
-        public const uint CAM_PRESET_8 = 105;
-        /// <summary>Panel button – recall camera preset 9.</summary>
-        public const uint CAM_PRESET_9 = 106;
-        /// <summary>Panel button – recall camera preset 10.</summary>
-        public const uint CAM_PRESET_10 = 107;
+        // ── Analog – settings startup volume (joins 19–20) ───────────────────────
+        /// <summary>Panel sends startup volume level (0–65535) to processor for persistence.</summary>
+        public const uint SETTINGS_STARTUP_VOL_SET = 19;
+        /// <summary>Feedback to panel – startup volume level (0–65535) from UserConfig.</summary>
+        public const uint SETTINGS_STARTUP_VOL_FB = 20;
 
-        // ── Digital – camera select buttons (output: joins 108–117) ─────────────────
-        /// <summary>Panel button – select camera 1.</summary>
-        public const uint CAM_SELECT_1 = 108;
-        /// <summary>Panel button – select camera 2.</summary>
-        public const uint CAM_SELECT_2 = 109;
-        /// <summary>Panel button – select camera 3.</summary>
-        public const uint CAM_SELECT_3 = 110;
-        /// <summary>Panel button – select camera 4.</summary>
-        public const uint CAM_SELECT_4 = 111;
-        /// <summary>Panel button – select camera 5.</summary>
-        public const uint CAM_SELECT_5 = 112;
-        /// <summary>Panel button – select camera 6.</summary>
-        public const uint CAM_SELECT_6 = 113;
-        /// <summary>Panel button – select camera 7.</summary>
-        public const uint CAM_SELECT_7 = 114;
-        /// <summary>Panel button – select camera 8.</summary>
-        public const uint CAM_SELECT_8 = 115;
-        /// <summary>Panel button – select camera 9.</summary>
-        public const uint CAM_SELECT_9 = 116;
-        /// <summary>Panel button – select camera 10.</summary>
-        public const uint CAM_SELECT_10 = 117;
-
-        // ── Digital – camera power / tracking feedback (from processor: joins 118–119) ─
-        /// <summary>Feedback to panel – camera power is on.</summary>
-        public const uint CAM_POWER_FB = 118;
-        /// <summary>Feedback to panel – camera auto-tracking is active.</summary>
-        public const uint CAM_TRACKING_FB = 119;
-
-        // ── Digital – camera active feedback (from processor: joins 120–129) ─────────
-        /// <summary>Feedback to panel – camera 1 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_1 = 120;
-        /// <summary>Feedback to panel – camera 2 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_2 = 121;
-        /// <summary>Feedback to panel – camera 3 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_3 = 122;
-        /// <summary>Feedback to panel – camera 4 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_4 = 123;
-        /// <summary>Feedback to panel – camera 5 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_5 = 124;
-        /// <summary>Feedback to panel – camera 6 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_6 = 125;
-        /// <summary>Feedback to panel – camera 7 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_7 = 126;
-        /// <summary>Feedback to panel – camera 8 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_8 = 127;
-        /// <summary>Feedback to panel – camera 9 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_9 = 128;
-        /// <summary>Feedback to panel – camera 10 is selected.</summary>
-        public const uint CAM_ACTIVE_FB_10 = 129;
-
-        // ── Analog – camera zoom speed (join 15 set, join 16 feedback) ──────────────
-        /// <summary>Panel slider – set camera zoom speed (0–65 535).</summary>
-        public const uint CAM_ZOOM_SPEED_SET = 15;
-        /// <summary>Feedback to panel – current camera zoom speed (0–65 535).</summary>
-        public const uint CAM_ZOOM_SPEED_FB = 16;
-
-        // ── Analog – camera moment speed (join 17 set, join 18 feedback) ────────────
-        /// <summary>Panel slider – set camera moment (pan/tilt) speed (0–65 535).</summary>
-        public const uint CAM_MOMENT_SPEED_SET = 17;
-        /// <summary>Feedback to panel – current camera moment speed (0–65 535).</summary>
-        public const uint CAM_MOMENT_SPEED_FB = 18;
+        // ── Digital – settings reset / BYOD behaviour (joins 133–137) ───────────
+        /// <summary>Panel button – reset all UserConfig.json values to defaults.</summary>
+        public const uint SETTINGS_RESET_BTN = 133;
+        /// <summary>Panel button – toggle BYOD auto-switch-on-connect setting.</summary>
+        public const uint SETTINGS_BYOD_AUTO_SWITCH_BTN = 134;
+        /// <summary>Feedback to panel – BYOD auto-switch setting is enabled.</summary>
+        public const uint SETTINGS_BYOD_AUTO_SWITCH_FB = 135;
+        /// <summary>Panel button – toggle BYOD auto-power-on setting.</summary>
+        public const uint SETTINGS_BYOD_AUTO_POWER_BTN = 136;
+        /// <summary>Feedback to panel – BYOD auto-power-on setting is enabled.</summary>
+        public const uint SETTINGS_BYOD_AUTO_POWER_FB = 137;
     }
 }

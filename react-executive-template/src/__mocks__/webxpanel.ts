@@ -6,8 +6,6 @@
 // We mock the factory to return a stable no-op object.
 const mockWebXPanel = {
   initialize: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
 };
 
 const getWebXPanel = jest.fn().mockReturnValue({

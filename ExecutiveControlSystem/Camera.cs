@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Crestron.SimplSharp;
 using Crestron.SimplSharpPro.DeviceSupport;
 
-namespace ConstrolSystemTemplate
+namespace ExecutiveControlSystem
 {
     /// <summary>
     /// Encapsulates all camera control logic for up to ten cameras.
@@ -216,7 +216,6 @@ namespace ConstrolSystemTemplate
             _panel.BooleanInput[JoinMap.CAM_POWER_FB].BoolValue    = _powerOn;
             _panel.BooleanInput[JoinMap.CAM_TRACKING_FB].BoolValue = _trackingOn;
 
-            // Set active feedback – camera 1 is selected by default
             for (int i = 0; i < MAX_CAMERAS; i++)
                 _panel.BooleanInput[ActiveFbJoins[i]].BoolValue = (i + 1 == _selectedCamera);
 

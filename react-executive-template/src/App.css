@@ -690,19 +690,14 @@
 
 /* Destination cards */
 .ev-destinations {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 12px;
-  overflow-x: auto;
-  padding-bottom: 8px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
 }
 
 .ev-dest-card {
   display: flex;
   flex-direction: column;
-  flex: 0 0 160px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);

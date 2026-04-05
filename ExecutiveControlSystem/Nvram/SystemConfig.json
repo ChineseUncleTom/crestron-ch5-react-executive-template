@@ -1,14 +1,8 @@
 {
     "RoomInfo": {
         "Name": "C# Playground",
-        "Number": "6666",
+        "Number": "66666",
         "PrimaryRoomNumber": 1
-    },
-
-    "HelpDesk": {
-        "ItPhone": "+1 (555) 010-0100",
-        "SupportEmail": "av-support@example.com",
-        "QrCodeLabel": "Scan for Quick Start Guide"
     },
 
     "Rooms": [
@@ -949,5 +943,11 @@
                 }
             ]
         }
-    ]
+    ],
+
+    "HelpSupport": {
+        "ItHelpdesk": "(800) 555-HELP",
+        "SupportEmail": "av-support@company.com",
+        "QrLabel": "Scan for Quick Start Guide"
+    }
 }
