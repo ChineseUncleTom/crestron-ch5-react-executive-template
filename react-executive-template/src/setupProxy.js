@@ -89,7 +89,13 @@ module.exports = function (app) {
         // Merge validated fields with the existing file so unknown keys are
         // preserved and unset fields fall back to their saved value.
         let existing = {};
-        try { existing = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8')); } catch (_) { /* new file */ }
+        try {
+          existing = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+        } catch (readErr) {
+          if (readErr.code !== 'ENOENT') {
+            console.warn('[api/user-config] Could not read existing config:', readErr.message);
+          }
+        }
         const merged = { ...existing, ...data };
 
         fs.writeFileSync(CONFIG_PATH, JSON.stringify(merged, null, 4), 'utf8');

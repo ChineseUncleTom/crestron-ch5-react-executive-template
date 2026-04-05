@@ -368,8 +368,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
         }
         apiLoadedRef.current = true;
       })
-      .catch(() => {
-        apiLoadedRef.current = true; // endpoint absent in production – allow saves
+      .catch((err: unknown) => {
+        // Endpoint is absent in production – this is expected and not an error.
+        // Log unexpected failures during development to aid debugging.
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[SettingsDrawer] Could not load user config from dev API:', err);
+        }
+        apiLoadedRef.current = true;
       });
   }, []); // useState setters are stable references; this effect intentionally runs once on mount
 
@@ -391,7 +396,11 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
           ClockFormat:     clockFormat,
           TempUnit:        tempUnit,
         }),
-      }).catch(() => { /* endpoint absent in production */ });
+      }).catch((err: unknown) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[SettingsDrawer] Could not save user config to dev API:', err);
+        }
+      });
     }, 500);
     return () => clearTimeout(timer);
   }, [themeMode, brandColor, byodAutoSwitchFb, byodAutoPowerOnFb, startupVolume, clockFormat, tempUnit]);
