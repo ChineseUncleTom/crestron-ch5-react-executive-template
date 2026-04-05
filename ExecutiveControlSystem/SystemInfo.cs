@@ -276,6 +276,46 @@ namespace ExecutiveControlSystem
             }
         }
 
+        // ── Network Info ──────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Reads the control system's LAN adapter parameters (IP address, subnet mask,
+        /// MAC address) using <see cref="CrestronEthernetHelper"/> and pushes them to
+        /// the corresponding panel serial joins.
+        /// <para>
+        /// Both the "Panel IP" and "Control System IP" fields are populated with the
+        /// same LAN-A adapter address because, in the XPanel/H5 architecture used by
+        /// this template, the web panel is served directly by the control system processor.
+        /// </para>
+        /// </summary>
+        public void PushNetworkInfo()
+        {
+            try
+            {
+                string ip     = CrestronEthernetHelper.GetEthernetParameter(
+                                    CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_CURRENT_IP_ADDRESS,
+                                    0);
+                string subnet = CrestronEthernetHelper.GetEthernetParameter(
+                                    CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_CURRENT_SUBNET_MASK,
+                                    0);
+                string mac    = CrestronEthernetHelper.GetEthernetParameter(
+                                    CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_MAC_ADDRESS,
+                                    0);
+
+                _panel.StringInput[JoinMap.NETWORK_PANEL_IP_SERIAL].StringValue = ip     ?? string.Empty;
+                _panel.StringInput[JoinMap.NETWORK_SUBNET_SERIAL].StringValue   = subnet ?? string.Empty;
+                _panel.StringInput[JoinMap.NETWORK_MAC_SERIAL].StringValue      = mac    ?? string.Empty;
+                _panel.StringInput[JoinMap.NETWORK_CS_IP_SERIAL].StringValue    = ip     ?? string.Empty;
+
+                CrestronConsole.PrintLine("[SystemInfo] Network info pushed – IP: {0}  Subnet: {1}  MAC: {2}", ip, subnet, mac);
+            }
+            catch (Exception ex)
+            {
+                CrestronConsole.PrintLine("[SystemInfo] Error reading network info: {0}", ex.Message);
+                ErrorLog.Error("[SystemInfo] Error reading network info: {0}", ex.Message);
+            }
+        }
+
         private void ReadJson(string filePath)
         {
             try

@@ -485,6 +485,16 @@ namespace ExecutiveControlSystem
         /// <summary>Feedback to panel – QR code label text (from SystemConfig).</summary>
         public const uint HELP_QR_LABEL_SERIAL = 56;
 
+        // ── Serial – Network info from control system (joins 61–64) ─────────────
+        /// <summary>Feedback to panel – control system LAN adapter IP address.</summary>
+        public const uint NETWORK_PANEL_IP_SERIAL = 61;
+        /// <summary>Feedback to panel – control system LAN adapter subnet mask.</summary>
+        public const uint NETWORK_SUBNET_SERIAL = 62;
+        /// <summary>Feedback to panel – control system LAN adapter MAC address.</summary>
+        public const uint NETWORK_MAC_SERIAL = 63;
+        /// <summary>Feedback to panel – control system IP address (default gateway host).</summary>
+        public const uint NETWORK_CS_IP_SERIAL = 64;
+
         // ── Serial – User settings (joins 57–60, bidirectional) ─────────────────
         /// <summary>Bidirectional – UI theme mode ("dark" / "light" / "high-contrast").</summary>
         public const uint SETTINGS_THEME_MODE = 57;
