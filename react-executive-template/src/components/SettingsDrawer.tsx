@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   X,
   Sun,
@@ -333,6 +333,77 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
    */
   const ch5Connected  = useDigitalJoin(Joins.SYSTEM_OFF_FB);  // proxy for WS health
   const roomName      = useSerialJoin(Joins.ROOM_NAME_SERIAL);
+
+  /* ── Config file persistence (dev-server API) ──────────────────────────── */
+
+  // Guard that is set to true once the initial GET /api/user-config response
+  // has been processed (or has failed).  The save effect checks this flag so
+  // it never overwrites the file with React defaults before the initial load
+  // has completed.
+  const apiLoadedRef = useRef(false);
+
+  // On mount: seed local state from CurrentUserConfig.json via the dev-server
+  // API defined in setupProxy.js.  Fails silently in production (no endpoint).
+  // Crestron join values always take precedence when the processor is connected.
+  useEffect(() => {
+    fetch('/api/user-config')
+      .then(r => (r.ok ? r.json() : null))
+      .then((cfg: Record<string, unknown> | null) => {
+        if (cfg) {
+          if (cfg.ThemeMode === 'dark' || cfg.ThemeMode === 'light' || cfg.ThemeMode === 'high-contrast') {
+            setThemeModeLocal(cfg.ThemeMode as ThemeMode);
+          }
+          if (typeof cfg.BrandColor === 'string' && /^#[0-9a-fA-F]{6}$/.test(cfg.BrandColor)) {
+            setBrandColorLocal(cfg.BrandColor);
+          }
+          if (cfg.ClockFormat === '12h' || cfg.ClockFormat === '24h') {
+            setClockFormatLocal(cfg.ClockFormat as ClockFormat);
+          }
+          if (cfg.TempUnit === 'F' || cfg.TempUnit === 'C') {
+            setTempUnitLocal(cfg.TempUnit as TempUnit);
+          }
+          if (typeof cfg.StartupVolume === 'number') {
+            setStartupVolumeLocal(Math.max(0, Math.min(100, Math.round(cfg.StartupVolume))));
+          }
+        }
+        apiLoadedRef.current = true;
+      })
+      .catch((err: unknown) => {
+        // Endpoint is absent in production – this is expected and not an error.
+        // Log unexpected failures during development to aid debugging.
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[SettingsDrawer] Could not load user config from dev API:', err);
+        }
+        apiLoadedRef.current = true;
+      });
+  }, []); // useState setters are stable references; this effect intentionally runs once on mount
+
+  // When settings change: persist them back to CurrentUserConfig.json via the
+  // dev-server API (debounced to avoid spamming on slider drags).
+  // Does nothing in production where the endpoint is absent.
+  useEffect(() => {
+    if (!apiLoadedRef.current) return; // skip until initial load is complete
+    const timer = setTimeout(() => {
+      fetch('/api/user-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ThemeMode:       themeMode,
+          BrandColor:      brandColor,
+          ByodAutoSwitch:  byodAutoSwitchFb,
+          ByodAutoPowerOn: byodAutoPowerOnFb,
+          StartupVolume:   startupVolume,
+          ClockFormat:     clockFormat,
+          TempUnit:        tempUnit,
+        }),
+      }).catch((err: unknown) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[SettingsDrawer] Could not save user config to dev API:', err);
+        }
+      });
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [themeMode, brandColor, byodAutoSwitchFb, byodAutoPowerOnFb, startupVolume, clockFormat, tempUnit]);
 
   /* ── Apply theme to document root ──────────────────────────────────────── */
   useEffect(() => {

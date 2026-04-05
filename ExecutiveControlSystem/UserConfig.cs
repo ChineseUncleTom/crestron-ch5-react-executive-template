@@ -3,7 +3,7 @@ using Crestron.SimplSharp;
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace ExecutiveControlSystem
 {
@@ -215,10 +215,12 @@ namespace ExecutiveControlSystem
             try
             {
                 string json;
-                using (var reader = new StreamReader(filePath, System.Text.Encoding.UTF8))
-                    json = reader.ReadToEnd();
+                using (StreamReader sr = new StreamReader(filePath, System.Text.Encoding.Default))
+                    json = sr.ReadToEnd();
 
-                var loaded = JsonSerializer.Deserialize<UserConfigData>(json);
+                CrestronConsole.PrintLine("[UserConfig] JSON read: {0}", json);
+
+                var loaded = JsonConvert.DeserializeObject<UserConfigData>(json);
                 if (loaded != null)
                 {
                     _data = loaded;
@@ -242,10 +244,9 @@ namespace ExecutiveControlSystem
         {
             try
             {
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                string json = JsonSerializer.Serialize(_data, options);
-                using (var writer = new StreamWriter(filePath, false, System.Text.Encoding.UTF8))
-                    writer.Write(json);
+                string json = JsonConvert.SerializeObject(_data, Formatting.Indented);
+                using (FileStream fs = File.Create(filePath))
+                    fs.Write(json, System.Text.Encoding.Default);
 
                 CrestronConsole.PrintLine("[UserConfig] Saved to file OK");
             }
