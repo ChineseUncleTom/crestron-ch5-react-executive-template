@@ -301,6 +301,12 @@ export const Joins = {
   HELP_SUPPORT_EMAIL_SERIAL: 55,  // processor → panel: AV support email
   HELP_QR_LABEL_SERIAL:      56,  // processor → panel: QR code label text
 
+  // Serial – Network info from control system (joins 61–64)
+  NETWORK_PANEL_IP_SERIAL: 61,    // processor → panel: LAN adapter IP address
+  NETWORK_SUBNET_SERIAL:   62,    // processor → panel: LAN adapter subnet mask
+  NETWORK_MAC_SERIAL:      63,    // processor → panel: LAN adapter MAC address
+  NETWORK_CS_IP_SERIAL:    64,    // processor → panel: control system IP address
+
   // Serial – User settings, bidirectional (joins 57–60)
   SETTINGS_THEME_MODE:    57,  // "dark" | "light" | "high-contrast"
   SETTINGS_BRAND_COLOR:   58,  // hex colour string e.g. "#3b82f6"
