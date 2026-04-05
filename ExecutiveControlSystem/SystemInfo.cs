@@ -296,7 +296,7 @@ namespace ExecutiveControlSystem
                                     CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_CURRENT_IP_ADDRESS,
                                     0);
                 string subnet = CrestronEthernetHelper.GetEthernetParameter(
-                                    CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_CURRENT_SUBNET_MASK,
+                                    CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_CURRENT_IP_MASK,
                                     0);
                 string mac    = CrestronEthernetHelper.GetEthernetParameter(
                                     CrestronEthernetHelper.ETHERNET_PARAMETER_TO_GET.GET_MAC_ADDRESS,
