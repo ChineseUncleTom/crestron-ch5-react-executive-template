@@ -8,9 +8,14 @@ interface TopBarProps {
 }
 
 /**
- * Converts a time string (HH:MM or HH:MM:SS, 24-hour) received from the
- * control system to the requested format ("12h" or "24h").
- * Returns the original string unchanged if it cannot be parsed.
+ * Converts a time string received from the control system to the requested
+ * display format.
+ *
+ * @param raw         - Raw time string from the processor, expected as
+ *                      "HH:MM", "HH:MM:SS" (24-hour), or "H:MM AM/PM".
+ * @param clockFormat - Desired output format: "12h" or "24h".
+ * @returns The formatted time string, or `raw` unchanged if it cannot be
+ *          parsed (so the original value is always preserved as a fallback).
  */
 function formatTime(raw: string, clockFormat: string): string {
   if (!raw) return raw;
@@ -21,7 +26,7 @@ function formatTime(raw: string, clockFormat: string): string {
   const minutes = match[2];
   const suffix = (match[4] || '').trim().toUpperCase();
 
-  // Normalise to 24-hour value first
+  // Normalize to 24-hour value first
   if (suffix === 'PM' && hours !== 12) hours += 12;
   if (suffix === 'AM' && hours === 12) hours = 0;
 
