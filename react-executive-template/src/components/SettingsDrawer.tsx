@@ -309,6 +309,12 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   const helpSupportEmail = useSerialJoin(Joins.HELP_SUPPORT_EMAIL_SERIAL);
   const helpQrLabel      = useSerialJoin(Joins.HELP_QR_LABEL_SERIAL);
 
+  /* ── Network info from control system ───────────────────────────────────── */
+  const networkPanelIp = useSerialJoin(Joins.NETWORK_PANEL_IP_SERIAL);
+  const networkSubnet  = useSerialJoin(Joins.NETWORK_SUBNET_SERIAL);
+  const networkMac     = useSerialJoin(Joins.NETWORK_MAC_SERIAL);
+  const networkCsIp    = useSerialJoin(Joins.NETWORK_CS_IP_SERIAL);
+
   /* ── Admin state ────────────────────────────────────────────────────────── */
   const [showPinModal, setShowPinModal] = useState(false);
   const [adminUnlocked, setAdminUnlocked] = useState(false);
@@ -473,11 +479,11 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
             <div className="settings-diag-group">
               <span className="settings-diag-group__title">Network Info</span>
               {[
-                { label: 'Room Name',        value: roomName || '—' },
-                { label: 'Panel IP',         value: '192.168.1.100' },
-                { label: 'Subnet',           value: '255.255.255.0' },
-                { label: 'MAC Address',      value: 'AA:BB:CC:DD:EE:FF' },
-                { label: 'Control System IP',value: '192.168.1.10' },
+                { label: 'Room Name',        value: roomName      || '—' },
+                { label: 'Panel IP',         value: networkPanelIp || '—' },
+                { label: 'Subnet',           value: networkSubnet  || '—' },
+                { label: 'MAC Address',      value: networkMac     || '—' },
+                { label: 'Control System IP',value: networkCsIp    || '—' },
               ].map(row => (
                 <div key={row.label} className="settings-diag-kv">
                   <span className="settings-diag-kv__key">{row.label}</span>

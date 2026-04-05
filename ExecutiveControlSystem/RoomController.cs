@@ -437,6 +437,7 @@ namespace ExecutiveControlSystem
             }
 
             _systemInfo.LoadSystemConfig();
+            _systemInfo.PushNetworkInfo();
             _userConfig.LoadAndPush();
             _systemInfo.ClockFormat = _userConfig.Data.ClockFormat ?? "12h";
             _systemInfo.StartDateTimeUpdates();
