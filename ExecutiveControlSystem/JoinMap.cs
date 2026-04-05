@@ -492,7 +492,7 @@ namespace ExecutiveControlSystem
         public const uint NETWORK_SUBNET_SERIAL = 62;
         /// <summary>Feedback to panel – control system LAN adapter MAC address.</summary>
         public const uint NETWORK_MAC_SERIAL = 63;
-        /// <summary>Feedback to panel – control system IP address (default gateway host).</summary>
+        /// <summary>Feedback to panel – control system IP address (same as Panel IP; both reflect the LAN-A adapter address).</summary>
         public const uint NETWORK_CS_IP_SERIAL = 64;
 
         // ── Serial – User settings (joins 57–60, bidirectional) ─────────────────
