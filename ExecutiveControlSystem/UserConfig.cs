@@ -8,15 +8,18 @@ using System.Text.Json;
 namespace ExecutiveControlSystem
 {
     /// <summary>
-    /// Manages user-configurable settings persisted in <c>Nvram/UserConfig.json</c>.
-    /// Loads settings on startup, pushes them to the panel via joins, saves individual
-    /// changes received from the panel, and supports resetting to factory defaults.
+    /// Manages user-configurable settings persisted in <c>Nvram/CurrentUserConfig.json</c>.
+    /// Loads settings on startup (preferring <c>CurrentUserConfig.json</c> and falling back to
+    /// <c>DefaultUserConfig.json</c>), pushes them to the panel via joins, saves individual
+    /// changes received from the panel to <c>CurrentUserConfig.json</c>, and supports
+    /// resetting to factory defaults.
     /// </summary>
     internal class UserConfig
     {
         private readonly BasicTriListWithSmartObject _panel;
 
-        private const string ConfigFileName = "UserConfig.json";
+        private const string DefaultConfigFileName  = "DefaultUserConfig.json";
+        private const string CurrentConfigFileName  = "CurrentUserConfig.json";
 
         // ── Default values ─────────────────────────────────────────────────────
 
@@ -58,44 +61,51 @@ namespace ExecutiveControlSystem
         // ── Load / Save ────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Loads <c>UserConfig.json</c> from the Nvram directory, deserializes it,
-        /// and pushes all settings to the panel via their joins.
-        /// Creates the file with default values if it does not exist.
+        /// Loads settings from the Nvram directory and pushes all values to the panel via their joins.
+        /// Priority: <c>CurrentUserConfig.json</c> → <c>DefaultUserConfig.json</c> → hardcoded defaults.
+        /// If neither file exists, hardcoded defaults are written to <c>CurrentUserConfig.json</c>.
         /// </summary>
         public void LoadAndPush()
         {
-            string filePath = GetFilePath();
+            string currentPath = GetCurrentFilePath();
+            string defaultPath = GetDefaultFilePath();
 
-            if (!File.Exists(filePath))
+            if (File.Exists(currentPath))
             {
-                CrestronConsole.PrintLine("[UserConfig] File not found – creating defaults at: {0}", filePath);
-                _data = new UserConfigData();
-                WriteFile(filePath);
+                CrestronConsole.PrintLine("[UserConfig] Loading from CurrentUserConfig.json");
+                ReadFile(currentPath);
+            }
+            else if (File.Exists(defaultPath))
+            {
+                CrestronConsole.PrintLine("[UserConfig] CurrentUserConfig.json not found – loading from DefaultUserConfig.json");
+                ReadFile(defaultPath);
             }
             else
             {
-                ReadFile(filePath);
+                CrestronConsole.PrintLine("[UserConfig] No config file found – creating defaults at: {0}", currentPath);
+                _data = new UserConfigData();
+                WriteFile(currentPath);
             }
 
             PushAllToPanel();
         }
 
         /// <summary>
-        /// Resets all settings to factory defaults, saves <c>UserConfig.json</c>,
+        /// Resets all settings to factory defaults, saves <c>CurrentUserConfig.json</c>,
         /// and pushes the new values to the panel.
         /// </summary>
         public void ResetToDefaults()
         {
             CrestronConsole.PrintLine("[UserConfig] Resetting all settings to defaults");
             _data = new UserConfigData();
-            WriteFile(GetFilePath());
+            WriteFile(GetCurrentFilePath());
             PushAllToPanel();
         }
 
-        /// <summary>Saves the current in-memory settings to <c>UserConfig.json</c>.</summary>
+        /// <summary>Saves the current in-memory settings to <c>CurrentUserConfig.json</c>.</summary>
         public void Save()
         {
-            WriteFile(GetFilePath());
+            WriteFile(GetCurrentFilePath());
         }
 
         // ── Receive from panel ─────────────────────────────────────────────────
@@ -186,11 +196,18 @@ namespace ExecutiveControlSystem
 
         // ── File helpers ───────────────────────────────────────────────────────
 
-        private static string GetFilePath()
+        private static string GetCurrentFilePath()
         {
             return Path.Combine(
                 Directory.GetApplicationRootDirectory(),
-                $"Nvram/{ConfigFileName}");
+                $"Nvram/{CurrentConfigFileName}");
+        }
+
+        private static string GetDefaultFilePath()
+        {
+            return Path.Combine(
+                Directory.GetApplicationRootDirectory(),
+                $"Nvram/{DefaultConfigFileName}");
         }
 
         private void ReadFile(string filePath)
