@@ -1,0 +1,45 @@
+{
+	"name": "ExecutiveContract",
+	"timestamp": "2026-04-05 13:57:54.150",
+	"version": "1.0.0.0",
+	"schema_version": 1,
+	"extra_value": "C# + React Contract",
+	"signals": {
+		"states": {
+			"boolean": {
+				"1": {
+					"1": "PowerButton.Power_On_Fb",
+					"2": "PowerButton.Power_Off_Fb"
+				}
+			},
+			"numeric": {
+				"1": {
+					"1": "PowerButton.Mode_Fb"
+				}
+			},
+			"string": {
+				"1": {
+					"1": "PowerButton.Name_Fb"
+				}
+			}
+		},
+		"events": {
+			"boolean": {
+				"PowerButton.Power_On": {
+					"joinId": 1,
+					"smartObjectId": 1
+				},
+				"PowerButton.Power_Off": {
+					"joinId": 2,
+					"smartObjectId": 1
+				}
+			},
+			"numeric": {
+				"PowerButton.Mode": {
+					"joinId": 1,
+					"smartObjectId": 1
+				}
+			}
+		}
+	}
+}
