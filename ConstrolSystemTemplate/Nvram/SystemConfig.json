@@ -5,6 +5,12 @@
         "PrimaryRoomNumber": 1
     },
 
+    "HelpDesk": {
+        "ItPhone": "+1 (555) 010-0100",
+        "SupportEmail": "av-support@example.com",
+        "QrCodeLabel": "Scan for Quick Start Guide"
+    },
+
     "Rooms": [
         {
             "Name": "Room 206",
