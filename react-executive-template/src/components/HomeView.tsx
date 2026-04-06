@@ -19,7 +19,8 @@ import {
  * Scenario buttons:
  * - "Present to Room"  – pulses PRESENT_TO_ROOM_BTN (join 10); the control
  *   system routes the local PC to all displays and powers them on.
- * - "Video Conference" – pulses INGEST_MODE_BTN (join 41) to toggle Ingest Mode.
+ * - "Video Conference" – status indicator driven by ROOM_PC_IN_MEETING_FB
+ *   (join 143); shows "Room in meeting" when high, "Room is ready" when low.
  * - "System Off/On"    – when room is on (SYSTEM_OFF_FB high): hold for 5 s
  *   to pulse SYSTEM_OFF_BTN (join 9). When room is off (SYSTEM_OFF_FB low):
  *   single press pulses SYSTEM_STARTUP_BTN (join 8).
@@ -27,19 +28,18 @@ import {
 const HOLD_DURATION_MS = 5000;
 
 const HomeView: React.FC = () => {
-  const roomName   = useSerialJoin(Joins.ROOM_NAME_SERIAL);
-  const inMeeting  = useDigitalJoin(Joins.INGEST_MODE_FB);
-  const byodActive = useDigitalJoin(Joins.BYOD_MODE_FB);
-  const privacyMuted = useDigitalJoin(Joins.AUDIO_PRIVACY_MUTE_FB);
-  const masterVolFb  = useAnalogJoin(Joins.VOLUME_FB);
+  const roomName        = useSerialJoin(Joins.ROOM_NAME_SERIAL);
+  const roomPCInMeeting = useDigitalJoin(Joins.ROOM_PC_IN_MEETING_FB);
+  const byodActive      = useDigitalJoin(Joins.BYOD_MODE_FB);
+  const privacyMuted    = useDigitalJoin(Joins.AUDIO_PRIVACY_MUTE_FB);
+  const masterVolFb     = useAnalogJoin(Joins.VOLUME_FB);
   // HIGH = room is currently powered on; LOW = room is off
   const roomIsOn = useDigitalJoin(Joins.SYSTEM_OFF_FB);
 
-  const sendPresentToRoom   = useSendDigitalPulse(Joins.PRESENT_TO_ROOM_BTN);
-  const sendVideoConference = useSendDigitalPulse(Joins.INGEST_MODE_BTN);
-  const sendSystemOff       = useSendDigitalPulse(Joins.SYSTEM_OFF_BTN);
-  const sendSystemStartup   = useSendDigitalPulse(Joins.SYSTEM_STARTUP_BTN);
-  const sendPrivacyMute     = useSendDigitalPulse(Joins.AUDIO_PRIVACY_MUTE_BTN);
+  const sendPresentToRoom = useSendDigitalPulse(Joins.PRESENT_TO_ROOM_BTN);
+  const sendSystemOff     = useSendDigitalPulse(Joins.SYSTEM_OFF_BTN);
+  const sendSystemStartup = useSendDigitalPulse(Joins.SYSTEM_STARTUP_BTN);
+  const sendPrivacyMute   = useSendDigitalPulse(Joins.AUDIO_PRIVACY_MUTE_BTN);
 
   const sendMasterVol = useSendAnalog(Joins.VOLUME_SET);
   const masterVolPct = Math.round((masterVolFb / 65535) * 100);
@@ -117,8 +117,8 @@ const HomeView: React.FC = () => {
       {/* ── Room status banner ───────────────────────────────────────────── */}
       <div className="home-view__status-banner">
         <span className="home-view__room-name">{roomName || 'Executive Boardroom'}</span>
-        <span className={`home-view__status-pill${inMeeting ? ' home-view__status-pill--meeting' : byodActive ? ' home-view__status-pill--byod' : ' home-view__status-pill--idle'}`}>
-          {inMeeting ? 'Ingest Active' : byodActive ? 'BYOD Active' : 'Room Ready'}
+        <span className={`home-view__status-pill${roomPCInMeeting ? ' home-view__status-pill--meeting' : byodActive ? ' home-view__status-pill--byod' : ' home-view__status-pill--idle'}`}>
+          {roomPCInMeeting ? 'In Meeting' : byodActive ? 'BYOD Active' : 'Room Ready'}
         </span>
       </div>
 
@@ -136,18 +136,18 @@ const HomeView: React.FC = () => {
           <span className="home-view__scenario-sub">Route local PC to all displays</span>
         </button>
 
-        <button
-          className={`home-view__scenario-btn home-view__scenario-btn--video${inMeeting ? ' home-view__scenario-btn--active' : ''}`}
-          onClick={sendVideoConference}
+        <div
+          className={`home-view__scenario-btn home-view__scenario-btn--video${roomPCInMeeting ? ' home-view__scenario-btn--active' : ''}`}
           aria-label="Video Conference"
-          aria-pressed={inMeeting}
+          role="status"
+          aria-live="polite"
         >
           <span className="home-view__scenario-icon" aria-hidden="true">
             <Video size={40} />
           </span>
           <span className="home-view__scenario-label">Video Conference</span>
-          <span className="home-view__scenario-sub">{inMeeting ? 'Ingest Mode: ON' : 'Enable Ingest Mode'}</span>
-        </button>
+          <span className="home-view__scenario-sub">{roomPCInMeeting ? 'Room in meeting' : 'Room is ready'}</span>
+        </div>
 
         <button
           className={[

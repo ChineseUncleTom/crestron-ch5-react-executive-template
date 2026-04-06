@@ -110,6 +110,10 @@ export const Joins = {
   VIDEO_SRC_FAR_END_VISIBLE_4: 141,
   VIDEO_SRC_FAR_END_VISIBLE_5: 142,
 
+  // Digital – room meeting state feedback (from processor: join 143)
+  // HIGH = room PC is in a meeting; LOW = room is ready / not in a meeting
+  ROOM_PC_IN_MEETING_FB: 143,
+
   // Digital – audio source volume-up buttons (output: joins 59–63)
   AUDIO_SRC_VOL_UP_1: 59,
   AUDIO_SRC_VOL_UP_2: 60,
