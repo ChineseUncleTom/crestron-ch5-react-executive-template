@@ -31,6 +31,7 @@ import {
   useSendAnalog,
   useSendSerial,
   useSendDigitalPulse,
+  useWebXPanelConnected,
   Joins,
 } from '../hooks/useCrestron';
 
@@ -325,13 +326,13 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
 
   /* ── CH5 joins (read-only for diagnostics display) ──────────────────────── */
   /**
-   * SYSTEM_OFF_FB (join 5) is used here as a proxy for the CH5 WebSocket
-   * connection health: it carries a non-zero value only after the processor has
-   * established a session and sent at least one feedback signal.  A dedicated
-   * WS_CONNECTED serial/digital join would be more semantically correct but is
-   * not yet defined in the current JoinMap.
+   * useWebXPanelConnected() tracks the actual CIP connection state between the
+   * browser and the Crestron processor by subscribing to the CONNECT_CIP /
+   * DISCONNECT_CIP events from @crestron/ch5-webxpanel.  This is more reliable
+   * than using a join value (e.g. SYSTEM_OFF_FB) as a proxy, because join
+   * values reflect room-mode state rather than WebSocket / CIP health.
    */
-  const ch5Connected  = useDigitalJoin(Joins.SYSTEM_OFF_FB);  // proxy for WS health
+  const ch5Connected  = useWebXPanelConnected();
   const roomName      = useSerialJoin(Joins.ROOM_NAME_SERIAL);
 
   /* ── Config file persistence (dev-server API) ──────────────────────────── */
@@ -491,6 +492,16 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
         </div>
 
         <div className="settings-drawer__body">
+
+          {/* ── Disconnect warning ─────────────────────────────────────────── */}
+          {!ch5Connected && (
+            <div className="settings-disconnected-banner" role="alert" aria-live="polite">
+              <WifiOff size={15} aria-hidden="true" />
+              <span>
+                Processor not connected — settings changes will not be saved.
+              </span>
+            </div>
+          )}
 
           {/* ══ 1. Theme Selections ══════════════════════════════════════════ */}
           <section className="settings-section" aria-labelledby="settings-theme-title">
