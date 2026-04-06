@@ -222,21 +222,16 @@ const DestDisplay: React.FC<DestDisplayProps> = ({
  * Executive video routing page.
  *
  * Design approach – action-oriented ("What do you want to show? → Where?"):
- * - Top:    Ingest Mode / BYOD mode toggles (independent of each other).
- * - Middle: Source selection tiles split by mode:
- *     Ingest Mode ON  → "What do you want to show to far end" (non-Room-PC sources,
- *                        controlled by VIDEO_SRC_FAR_END_VISIBLE signals) appears
- *                        above "What do you want to show locally" (Room-PC sources).
- *     Ingest Mode OFF → Only "What do you want to show locally" with all sources.
- * - Bottom: Destination display cards with independent power / video controls.
- *           BYOD toggle and connect button as a standalone section.
+ * - Top:    "What do you want to show to far end?" – non-Room-PC sources
+ *           (controlled by VIDEO_SRC_FAR_END_VISIBLE signals from processor),
+ *           routed to the far-end output port of the video switcher.
+ * - Middle: "What do you want to show locally?" – all sources routed to the
+ *           connected displays (HDMI OUT 1–4).
+ * - Bottom: Destination display cards with independent power / video controls,
+ *           followed by a BYOD connection button.
  */
 const VideoView: React.FC = () => {
-  const ingestModeOn = useDigitalJoin(Joins.INGEST_MODE_FB);
-  const byodModeOn   = useDigitalJoin(Joins.BYOD_MODE_FB);
-  const sendIngest   = useSendDigitalPulse(Joins.INGEST_MODE_BTN);
-  const sendByod     = useSendDigitalPulse(Joins.BYOD_MODE_BTN);
-  const sendByodSel  = useSendDigitalPulse(Joins.BYOD_SELECT_BTN);
+  const sendByodSel = useSendDigitalPulse(Joins.BYOD_SELECT_BTN);
 
   // Per-source far-end visibility feedback (from processor via VIDEO_SRC_FAR_END_VISIBLE_1-5)
   const farEndVis1 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_1);
@@ -246,73 +241,27 @@ const VideoView: React.FC = () => {
   const farEndVis5 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_5);
   const farEndVisibility = [farEndVis1, farEndVis2, farEndVis3, farEndVis4, farEndVis5];
 
-  // Sources for the "far end" section (visible in Ingest Mode for non-Room-PC sources)
+  // Non-Room-PC sources shown in the far-end section (processor controls visibility)
   const farEndSources = SOURCES.filter((_, i) => farEndVisibility[i]);
-  // Sources for the "local" section – all sources in Local Presentation Mode,
-  // only Room-PC sources (not in far-end) when Ingest Mode is active
-  const localSources = ingestModeOn
-    ? SOURCES.filter((_, i) => !farEndVisibility[i])
-    : [...SOURCES];
 
   return (
     <div className="ev-page">
 
-      {/* ── Mode toggles ──────────────────────────────────────────────────── */}
-      <div className="ev-mode-bar">
-        <label className="ev-toggle-wrap">
-          <span className="ev-toggle-wrap__text">
-            Ingest Mode <span aria-hidden="true">{ingestModeOn ? '(On)' : '(Off)'}</span>
-          </span>
-          <span
-            className={`ev-toggle${ingestModeOn ? ' ev-toggle--on' : ''}`}
-            role="switch"
-            aria-checked={ingestModeOn}
-            aria-label="Ingest Mode"
-            tabIndex={0}
-            onClick={sendIngest}
-            onKeyDown={(e) => e.key === 'Enter' && sendIngest()}
-          >
-            <span className="ev-toggle__thumb" />
-          </span>
-        </label>
-
-        <span className="ev-mode-bar__hint">Select a source, then choose a display.</span>
-
-        <label className="ev-toggle-wrap">
-          <span className="ev-toggle-wrap__text">
-            BYOD Mode <span aria-hidden="true">{byodModeOn ? '(On)' : '(Off)'}</span>
-          </span>
-          <span
-            className={`ev-toggle${byodModeOn ? ' ev-toggle--on' : ''}`}
-            role="switch"
-            aria-checked={byodModeOn}
-            aria-label="BYOD Mode"
-            tabIndex={0}
-            onClick={sendByod}
-            onKeyDown={(e) => e.key === 'Enter' && sendByod()}
-          >
-            <span className="ev-toggle__thumb" />
-          </span>
-        </label>
-      </div>
-
-      {/* ── Far-end sources (Ingest Mode only) ───────────────────────────── */}
-      {ingestModeOn && (
-        <section className="ev-section" aria-label="Far-end sources">
-          <h2 className="ev-section__title">What do you want to show to far end?</h2>
-          <div className="ev-sources">
-            {farEndSources.map((src) => (
-              <SourceTile key={src.selectJoin} {...src} />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* ── Far-end sources ───────────────────────────────────────────────── */}
+      <section className="ev-section" aria-label="Far-end sources">
+        <h2 className="ev-section__title">What do you want to show to far end?</h2>
+        <div className="ev-sources">
+          {farEndSources.map((src) => (
+            <SourceTile key={src.selectJoin} {...src} />
+          ))}
+        </div>
+      </section>
 
       {/* ── Local sources ────────────────────────────────────────────────── */}
       <section className="ev-section" aria-label="Local sources">
         <h2 className="ev-section__title">What do you want to show locally?</h2>
         <div className="ev-sources">
-          {localSources.map((src) => (
+          {SOURCES.map((src) => (
             <SourceTile key={src.selectJoin} {...src} />
           ))}
         </div>
