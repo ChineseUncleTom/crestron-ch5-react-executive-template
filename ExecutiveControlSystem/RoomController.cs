@@ -31,6 +31,8 @@ namespace ExecutiveControlSystem
         private bool   _roomIsOn;
         private bool   _ingestModeOn;
         private bool   _byodModeOn;
+        // TODO: replace with actual device API integration when available
+        private bool   _roomPCInMeeting = true;  // hard-coded high for testing
 
         // Destination power / video state (4 destinations)
         private readonly bool[] _destPowerOn = new bool[4];
@@ -447,8 +449,9 @@ namespace ExecutiveControlSystem
             _panel.UShortInput[JoinMap.BRIGHTNESS_FB].UShortValue = _brightness;
 
             SendSystemOnFeedback();
-            _panel.BooleanInput[JoinMap.INGEST_MODE_FB].BoolValue = _ingestModeOn;
-            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue   = _byodModeOn;
+            _panel.BooleanInput[JoinMap.INGEST_MODE_FB].BoolValue       = _ingestModeOn;
+            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue         = _byodModeOn;
+            _panel.BooleanInput[JoinMap.ROOM_PC_IN_MEETING_FB].BoolValue = _roomPCInMeeting;
 
             for (int i = 0; i < 4; i++)
             {

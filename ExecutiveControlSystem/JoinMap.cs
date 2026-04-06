@@ -523,6 +523,10 @@ namespace ExecutiveControlSystem
         /// <summary>Feedback to panel – BYOD auto-power-on setting is enabled.</summary>
         public const uint SETTINGS_BYOD_AUTO_POWER_FB = 137;
 
+        // ── Digital – room PC meeting state (join 143) ──────────────────────────────────────────
+        /// <summary>Feedback to panel – room PC is currently in a meeting (high = in meeting, low = ready).</summary>
+        public const uint ROOM_PC_IN_MEETING_FB = 143;
+
         // ── Digital – source visible in "far end" section during Ingest Mode (joins 138–142) ──
         /// <summary>Feedback to panel – source 1 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
         public const uint VIDEO_SRC_FAR_END_VISIBLE_1 = 138;
