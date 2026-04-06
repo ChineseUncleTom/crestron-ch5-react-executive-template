@@ -3,6 +3,14 @@ import { useState, useEffect, useCallback } from 'react';
 // declare a package.json "main" field; webpack resolves explicit sub-paths.
 // The bundle exposes everything via the named `CrComLib` export.
 import { CrComLib } from "@crestron/ch5-crcomlib/build_bundles/cjs/cr-com-lib";
+import getWebXPanel from '@crestron/ch5-webxpanel';
+
+// Obtain the WebXPanel singleton and event-type constants once at module load.
+// getWebXPanel() returns the same singleton instance every call so calling it
+// here does not create a second panel; it is safe to call in multiple modules.
+const { WebXPanel, WebXPanelEvents, isActive: xpanelIsActive } = getWebXPanel(
+  typeof window !== 'undefined',
+);
 
 // Expose CrComLib as a global so that the WebXPanel worker thread can
 // resolve it by name when routing feedback signals to subscribers.
@@ -408,4 +416,45 @@ export function useSendSerial(joinNumber: number): (value: string) => void {
     },
     [joinNumber],
   );
+}
+
+/**
+ * Returns true when the WebXPanel CIP (Crestron Internet Protocol) connection
+ * to the processor is active.
+ *
+ * The hook subscribes to the `CONNECT_CIP` and `DISCONNECT_CIP` events emitted
+ * by the @crestron/ch5-webxpanel library, which fires them whenever the
+ * low-level CIP channel to VC-4 (or a hardware processor) is established or
+ * torn down.  These events are more reliable than using a join value as a
+ * connection proxy because they reflect actual WebSocket / CIP state rather
+ * than room-mode state.
+ *
+ * **Initial state** is always `false` because @crestron/ch5-webxpanel v2.x
+ * does not expose a public API to query the current connection status
+ * synchronously.  In practice this is correct: the CIP handshake is
+ * asynchronous, so the hook will always start disconnected and transition to
+ * `true` once `CONNECT_CIP` fires – which happens within a few hundred
+ * milliseconds of the page loading inside an XPanel context.
+ *
+ * Returns `false` permanently when running outside an XPanel context (e.g. a
+ * regular browser tab used for development without a live processor).
+ */
+export function useWebXPanelConnected(): boolean {
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    if (!xpanelIsActive) return; // not in an XPanel context – stay false
+
+    const onConnect    = () => setConnected(true);
+    const onDisconnect = () => setConnected(false);
+
+    WebXPanel.addEventListener(WebXPanelEvents.CONNECT_CIP,    onConnect);
+    WebXPanel.addEventListener(WebXPanelEvents.DISCONNECT_CIP, onDisconnect);
+
+    // @crestron/ch5-webxpanel does not expose removeEventListener; the hook is
+    // intended to live for the full lifetime of the application, so no cleanup
+    // is required.
+  }, []); // event subscriptions are set up once on mount
+
+  return connected;
 }

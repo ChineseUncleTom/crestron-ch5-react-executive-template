@@ -1606,6 +1606,21 @@
    Settings – Sections
    ══════════════════════════════════════════════════════════════════════════════ */
 
+/* Disconnect warning banner – shown when the WebXPanel CIP connection is down */
+.settings-disconnected-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 16px 0;
+  padding: 10px 14px;
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.4);
+  border-radius: var(--radius-md, 6px);
+  font-size: 0.78rem;
+  color: rgb(234, 179, 8);
+  line-height: 1.4;
+}
+
 .settings-section {
   padding: 16px 20px;
 }
