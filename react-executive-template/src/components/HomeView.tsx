@@ -19,7 +19,7 @@ import {
  * Scenario buttons:
  * - "Present to Room"  – pulses PRESENT_TO_ROOM_BTN (join 10); the control
  *   system routes the local PC to all displays and powers them on.
- * - "Video Conference" – pulses TEAMS_MODE_BTN (join 41) to enter Teams mode.
+ * - "Video Conference" – pulses INGEST_MODE_BTN (join 41) to toggle Ingest Mode.
  * - "System Off/On"    – when room is on (SYSTEM_OFF_FB high): hold for 5 s
  *   to pulse SYSTEM_OFF_BTN (join 9). When room is off (SYSTEM_OFF_FB low):
  *   single press pulses SYSTEM_STARTUP_BTN (join 8).
@@ -28,7 +28,7 @@ const HOLD_DURATION_MS = 5000;
 
 const HomeView: React.FC = () => {
   const roomName   = useSerialJoin(Joins.ROOM_NAME_SERIAL);
-  const inMeeting  = useDigitalJoin(Joins.TEAMS_MODE_FB);
+  const inMeeting  = useDigitalJoin(Joins.INGEST_MODE_FB);
   const byodActive = useDigitalJoin(Joins.BYOD_MODE_FB);
   const privacyMuted = useDigitalJoin(Joins.AUDIO_PRIVACY_MUTE_FB);
   const masterVolFb  = useAnalogJoin(Joins.VOLUME_FB);
@@ -36,7 +36,7 @@ const HomeView: React.FC = () => {
   const roomIsOn = useDigitalJoin(Joins.SYSTEM_OFF_FB);
 
   const sendPresentToRoom   = useSendDigitalPulse(Joins.PRESENT_TO_ROOM_BTN);
-  const sendVideoConference = useSendDigitalPulse(Joins.TEAMS_MODE_BTN);
+  const sendVideoConference = useSendDigitalPulse(Joins.INGEST_MODE_BTN);
   const sendSystemOff       = useSendDigitalPulse(Joins.SYSTEM_OFF_BTN);
   const sendSystemStartup   = useSendDigitalPulse(Joins.SYSTEM_STARTUP_BTN);
   const sendPrivacyMute     = useSendDigitalPulse(Joins.AUDIO_PRIVACY_MUTE_BTN);
@@ -118,7 +118,7 @@ const HomeView: React.FC = () => {
       <div className="home-view__status-banner">
         <span className="home-view__room-name">{roomName || 'Executive Boardroom'}</span>
         <span className={`home-view__status-pill${inMeeting ? ' home-view__status-pill--meeting' : byodActive ? ' home-view__status-pill--byod' : ' home-view__status-pill--idle'}`}>
-          {inMeeting ? 'In Meeting' : byodActive ? 'BYOD Active' : 'Room Ready'}
+          {inMeeting ? 'Ingest Active' : byodActive ? 'BYOD Active' : 'Room Ready'}
         </span>
       </div>
 
@@ -146,7 +146,7 @@ const HomeView: React.FC = () => {
             <Video size={40} />
           </span>
           <span className="home-view__scenario-label">Video Conference</span>
-          <span className="home-view__scenario-sub">{inMeeting ? 'Teams Mode: ON' : 'Enable Teams Mode'}</span>
+          <span className="home-view__scenario-sub">{inMeeting ? 'Ingest Mode: ON' : 'Enable Ingest Mode'}</span>
         </button>
 
         <button

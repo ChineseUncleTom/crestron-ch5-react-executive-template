@@ -724,15 +724,15 @@
     ],
 
     "VideoSources": [
-        { "Name": "None", "Id": 0 },
-        { "Name": "Teams Content", "Id": 1 },
-        { "Name": "Teams Attendance", "Id": 2 },
-        { "Name": "Table USB-C", "Id": 3 },
-        { "Name": "Table HDMI", "Id": 4 },
-        { "Name": "Wall HDMI", "Id": 5 },
-        { "Name": "", "Id": 6 },
-        { "Name": "", "Id": 7 },
-        { "Name": "", "Id": 8 }
+        { "Name": "None",             "Id": 0, "IsRoomPC": false },
+        { "Name": "Teams Content",    "Id": 1, "IsRoomPC": true  },
+        { "Name": "Teams Attendance", "Id": 2, "IsRoomPC": true  },
+        { "Name": "Table USB-C",      "Id": 3, "IsRoomPC": false },
+        { "Name": "Table HDMI",       "Id": 4, "IsRoomPC": false },
+        { "Name": "Wall HDMI",        "Id": 5, "IsRoomPC": false },
+        { "Name": "",                 "Id": 6, "IsRoomPC": false },
+        { "Name": "",                 "Id": 7, "IsRoomPC": false },
+        { "Name": "",                 "Id": 8, "IsRoomPC": false }
     ],
 
     "VideoDestinations": [

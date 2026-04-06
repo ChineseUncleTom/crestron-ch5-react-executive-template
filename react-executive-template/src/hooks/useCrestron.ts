@@ -89,9 +89,9 @@ export const Joins = {
   VIDEO_DEST_VIDEO_FB_3: 37,
   VIDEO_DEST_VIDEO_FB_4: 38,
 
-  // Digital – Teams / BYOD mode (joins 41–45)
-  TEAMS_MODE_BTN: 41,
-  TEAMS_MODE_FB: 42,
+  // Digital – Ingest / BYOD mode (joins 41–45)
+  INGEST_MODE_BTN: 41,
+  INGEST_MODE_FB: 42,
   BYOD_MODE_BTN: 43,
   BYOD_MODE_FB: 44,
   BYOD_SELECT_BTN: 45,
@@ -102,6 +102,13 @@ export const Joins = {
   VIDEO_SRC_AVAIL_3: 56,
   VIDEO_SRC_AVAIL_4: 57,
   VIDEO_SRC_AVAIL_5: 58,
+
+  // Digital – source visible in "far end" section during Ingest Mode (from processor: joins 138–142)
+  VIDEO_SRC_FAR_END_VISIBLE_1: 138,
+  VIDEO_SRC_FAR_END_VISIBLE_2: 139,
+  VIDEO_SRC_FAR_END_VISIBLE_3: 140,
+  VIDEO_SRC_FAR_END_VISIBLE_4: 141,
+  VIDEO_SRC_FAR_END_VISIBLE_5: 142,
 
   // Digital – audio source volume-up buttons (output: joins 59–63)
   AUDIO_SRC_VOL_UP_1: 59,

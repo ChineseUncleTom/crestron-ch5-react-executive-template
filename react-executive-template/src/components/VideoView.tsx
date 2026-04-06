@@ -11,39 +11,44 @@ import {
 
 const SOURCES = [
   {
-    selectJoin:     Joins.VIDEO_SRC_SELECT_1,
-    activeFbJoin:   Joins.VIDEO_SRC_ACTIVE_1,
-    availableFbJoin: Joins.VIDEO_SRC_AVAIL_1,
-    nameSerialJoin: Joins.VIDEO_SRC_NAME_1,
-    defaultName:    'Room PC',
+    selectJoin:          Joins.VIDEO_SRC_SELECT_1,
+    activeFbJoin:        Joins.VIDEO_SRC_ACTIVE_1,
+    availableFbJoin:     Joins.VIDEO_SRC_AVAIL_1,
+    nameSerialJoin:      Joins.VIDEO_SRC_NAME_1,
+    farEndVisibleFbJoin: Joins.VIDEO_SRC_FAR_END_VISIBLE_1,
+    defaultName:         'Room PC',
   },
   {
-    selectJoin:     Joins.VIDEO_SRC_SELECT_2,
-    activeFbJoin:   Joins.VIDEO_SRC_ACTIVE_2,
-    availableFbJoin: Joins.VIDEO_SRC_AVAIL_2,
-    nameSerialJoin: Joins.VIDEO_SRC_NAME_2,
-    defaultName:    'Laptop HDMI',
+    selectJoin:          Joins.VIDEO_SRC_SELECT_2,
+    activeFbJoin:        Joins.VIDEO_SRC_ACTIVE_2,
+    availableFbJoin:     Joins.VIDEO_SRC_AVAIL_2,
+    nameSerialJoin:      Joins.VIDEO_SRC_NAME_2,
+    farEndVisibleFbJoin: Joins.VIDEO_SRC_FAR_END_VISIBLE_2,
+    defaultName:         'Laptop HDMI',
   },
   {
-    selectJoin:     Joins.VIDEO_SRC_SELECT_3,
-    activeFbJoin:   Joins.VIDEO_SRC_ACTIVE_3,
-    availableFbJoin: Joins.VIDEO_SRC_AVAIL_3,
-    nameSerialJoin: Joins.VIDEO_SRC_NAME_3,
-    defaultName:    'Wireless Cast',
+    selectJoin:          Joins.VIDEO_SRC_SELECT_3,
+    activeFbJoin:        Joins.VIDEO_SRC_ACTIVE_3,
+    availableFbJoin:     Joins.VIDEO_SRC_AVAIL_3,
+    nameSerialJoin:      Joins.VIDEO_SRC_NAME_3,
+    farEndVisibleFbJoin: Joins.VIDEO_SRC_FAR_END_VISIBLE_3,
+    defaultName:         'Wireless Cast',
   },
   {
-    selectJoin:     Joins.VIDEO_SRC_SELECT_4,
-    activeFbJoin:   Joins.VIDEO_SRC_ACTIVE_4,
-    availableFbJoin: Joins.VIDEO_SRC_AVAIL_4,
-    nameSerialJoin: Joins.VIDEO_SRC_NAME_4,
-    defaultName:    'Source 4',
+    selectJoin:          Joins.VIDEO_SRC_SELECT_4,
+    activeFbJoin:        Joins.VIDEO_SRC_ACTIVE_4,
+    availableFbJoin:     Joins.VIDEO_SRC_AVAIL_4,
+    nameSerialJoin:      Joins.VIDEO_SRC_NAME_4,
+    farEndVisibleFbJoin: Joins.VIDEO_SRC_FAR_END_VISIBLE_4,
+    defaultName:         'Source 4',
   },
   {
-    selectJoin:     Joins.VIDEO_SRC_SELECT_5,
-    activeFbJoin:   Joins.VIDEO_SRC_ACTIVE_5,
-    availableFbJoin: Joins.VIDEO_SRC_AVAIL_5,
-    nameSerialJoin: Joins.VIDEO_SRC_NAME_5,
-    defaultName:    'Source 5',
+    selectJoin:          Joins.VIDEO_SRC_SELECT_5,
+    activeFbJoin:        Joins.VIDEO_SRC_ACTIVE_5,
+    availableFbJoin:     Joins.VIDEO_SRC_AVAIL_5,
+    nameSerialJoin:      Joins.VIDEO_SRC_NAME_5,
+    farEndVisibleFbJoin: Joins.VIDEO_SRC_FAR_END_VISIBLE_5,
+    defaultName:         'Source 5',
   },
 ] as const;
 
@@ -217,16 +222,37 @@ const DestDisplay: React.FC<DestDisplayProps> = ({
  * Executive video routing page.
  *
  * Design approach – action-oriented ("What do you want to show? → Where?"):
- * - Top:    Teams / BYOD mode toggles.
- * - Middle: Source selection tiles (large, easy tap targets).
+ * - Top:    Ingest Mode / BYOD mode toggles (independent of each other).
+ * - Middle: Source selection tiles split by mode:
+ *     Ingest Mode ON  → "What do you want to show to far end" (non-Room-PC sources,
+ *                        controlled by VIDEO_SRC_FAR_END_VISIBLE signals) appears
+ *                        above "What do you want to show locally" (Room-PC sources).
+ *     Ingest Mode OFF → Only "What do you want to show locally" with all sources.
  * - Bottom: Destination display cards with independent power / video controls.
+ *           BYOD toggle and connect button as a standalone section.
  */
 const VideoView: React.FC = () => {
-  const teamsModeOn  = useDigitalJoin(Joins.TEAMS_MODE_FB);
+  const ingestModeOn = useDigitalJoin(Joins.INGEST_MODE_FB);
   const byodModeOn   = useDigitalJoin(Joins.BYOD_MODE_FB);
-  const sendTeams    = useSendDigitalPulse(Joins.TEAMS_MODE_BTN);
+  const sendIngest   = useSendDigitalPulse(Joins.INGEST_MODE_BTN);
   const sendByod     = useSendDigitalPulse(Joins.BYOD_MODE_BTN);
   const sendByodSel  = useSendDigitalPulse(Joins.BYOD_SELECT_BTN);
+
+  // Per-source far-end visibility feedback (from processor via VIDEO_SRC_FAR_END_VISIBLE_1-5)
+  const farEndVis1 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_1);
+  const farEndVis2 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_2);
+  const farEndVis3 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_3);
+  const farEndVis4 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_4);
+  const farEndVis5 = useDigitalJoin(Joins.VIDEO_SRC_FAR_END_VISIBLE_5);
+  const farEndVisibility = [farEndVis1, farEndVis2, farEndVis3, farEndVis4, farEndVis5];
+
+  // Sources for the "far end" section (visible in Ingest Mode for non-Room-PC sources)
+  const farEndSources = SOURCES.filter((_, i) => farEndVisibility[i]);
+  // Sources for the "local" section – all sources in Local Presentation Mode,
+  // only Room-PC sources (not in far-end) when Ingest Mode is active
+  const localSources = ingestModeOn
+    ? SOURCES.filter((_, i) => !farEndVisibility[i])
+    : [...SOURCES];
 
   return (
     <div className="ev-page">
@@ -235,16 +261,16 @@ const VideoView: React.FC = () => {
       <div className="ev-mode-bar">
         <label className="ev-toggle-wrap">
           <span className="ev-toggle-wrap__text">
-            Teams Mode <span aria-hidden="true">{teamsModeOn ? '(On)' : '(Off)'}</span>
+            Ingest Mode <span aria-hidden="true">{ingestModeOn ? '(On)' : '(Off)'}</span>
           </span>
           <span
-            className={`ev-toggle${teamsModeOn ? ' ev-toggle--on' : ''}`}
+            className={`ev-toggle${ingestModeOn ? ' ev-toggle--on' : ''}`}
             role="switch"
-            aria-checked={teamsModeOn}
-            aria-label="Teams Mode"
+            aria-checked={ingestModeOn}
+            aria-label="Ingest Mode"
             tabIndex={0}
-            onClick={sendTeams}
-            onKeyDown={(e) => e.key === 'Enter' && sendTeams()}
+            onClick={sendIngest}
+            onKeyDown={(e) => e.key === 'Enter' && sendIngest()}
           >
             <span className="ev-toggle__thumb" />
           </span>
@@ -270,11 +296,23 @@ const VideoView: React.FC = () => {
         </label>
       </div>
 
-      {/* ── Sources ───────────────────────────────────────────────────────── */}
-      <section className="ev-section" aria-label="Sources">
-        <h2 className="ev-section__title">What do you want to show?</h2>
+      {/* ── Far-end sources (Ingest Mode only) ───────────────────────────── */}
+      {ingestModeOn && (
+        <section className="ev-section" aria-label="Far-end sources">
+          <h2 className="ev-section__title">What do you want to show to far end?</h2>
+          <div className="ev-sources">
+            {farEndSources.map((src) => (
+              <SourceTile key={src.selectJoin} {...src} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── Local sources ────────────────────────────────────────────────── */}
+      <section className="ev-section" aria-label="Local sources">
+        <h2 className="ev-section__title">What do you want to show locally?</h2>
         <div className="ev-sources">
-          {SOURCES.map((src) => (
+          {localSources.map((src) => (
             <SourceTile key={src.selectJoin} {...src} />
           ))}
         </div>

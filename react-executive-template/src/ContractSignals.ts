@@ -39,12 +39,12 @@ export const SystemControl = {
   System_Startup:    'SystemControl.System_Startup',
   System_Off:        'SystemControl.System_Off',
   Present_To_Room:   'SystemControl.Present_To_Room',
-  Teams_Mode_Toggle: 'SystemControl.Teams_Mode_Toggle',
+  Ingest_Mode_Toggle: 'SystemControl.Ingest_Mode_Toggle',
   BYOD_Mode_Toggle:  'SystemControl.BYOD_Mode_Toggle',
   BYOD_Select:       'SystemControl.BYOD_Select',
   // States (CS → UI)
   System_On_Fb:      'SystemControl.System_On_Fb',
-  Teams_Mode_Fb:     'SystemControl.Teams_Mode_Fb',
+  Ingest_Mode_Fb:    'SystemControl.Ingest_Mode_Fb',
   BYOD_Mode_Fb:      'SystemControl.BYOD_Mode_Fb',
 } as const;
 
