@@ -21,8 +21,9 @@ describe('App – HomeView (default landing page)', () => {
   it('renders the scenario buttons', () => {
     render(<App />);
     expect(screen.getByRole('button', { name: 'Present to Room' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Video Conference' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'System Off' })).toBeInTheDocument();
+    expect(screen.getByLabelText('Video Conference')).toBeInTheDocument();
+    // Room defaults to off in tests (SYSTEM_OFF_FB = false), so button shows "System On"
+    expect(screen.getByRole('button', { name: /System On/i })).toBeInTheDocument();
   });
 
   it('renders the microphone quick-access button', () => {
