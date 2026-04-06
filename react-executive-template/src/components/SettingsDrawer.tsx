@@ -343,9 +343,14 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   const apiLoadedRef = useRef(false);
 
   // On mount: seed local state from CurrentUserConfig.json via the dev-server
-  // API defined in setupProxy.js.  Fails silently in production (no endpoint).
+  // API defined in setupProxy.js.  Only runs in development; the endpoint does
+  // not exist in production (CH5 archive on a Crestron panel).
   // Crestron join values always take precedence when the processor is connected.
   useEffect(() => {
+    if (process.env.NODE_ENV !== 'development') {
+      apiLoadedRef.current = true;
+      return;
+    }
     fetch('/api/user-config')
       .then(r => (r.ok ? r.json() : null))
       .then((cfg: Record<string, unknown> | null) => {
@@ -380,9 +385,10 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
 
   // When settings change: persist them back to CurrentUserConfig.json via the
   // dev-server API (debounced to avoid spamming on slider drags).
-  // Does nothing in production where the endpoint is absent.
+  // Only runs in development; the endpoint is absent in production.
   useEffect(() => {
     if (!apiLoadedRef.current) return; // skip until initial load is complete
+    if (process.env.NODE_ENV !== 'development') return;
     const timer = setTimeout(() => {
       fetch('/api/user-config', {
         method: 'POST',

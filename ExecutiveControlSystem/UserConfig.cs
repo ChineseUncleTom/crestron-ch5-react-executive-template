@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace ExecutiveControlSystem
 {
     /// <summary>
-    /// Manages user-configurable settings persisted in <c>Nvram/CurrentUserConfig.json</c>.
+    /// Manages user-configurable settings persisted in <c>/nvram/CurrentUserConfig.json</c>.
     /// Loads settings on startup (preferring <c>CurrentUserConfig.json</c> and falling back to
     /// <c>DefaultUserConfig.json</c>), pushes them to the panel via joins, saves individual
     /// changes received from the panel to <c>CurrentUserConfig.json</c>, and supports
@@ -61,7 +61,7 @@ namespace ExecutiveControlSystem
         // ── Load / Save ────────────────────────────────────────────────────────
 
         /// <summary>
-        /// Loads settings from the Nvram directory and pushes all values to the panel via their joins.
+        /// Loads settings from <c>/nvram</c> and pushes all values to the panel via their joins.
         /// Priority: <c>CurrentUserConfig.json</c> → <c>DefaultUserConfig.json</c> → hardcoded defaults.
         /// If neither file exists, hardcoded defaults are written to <c>CurrentUserConfig.json</c>.
         /// </summary>
@@ -198,16 +198,12 @@ namespace ExecutiveControlSystem
 
         private static string GetCurrentFilePath()
         {
-            return Path.Combine(
-                Directory.GetApplicationRootDirectory(),
-                $"Nvram/{CurrentConfigFileName}");
+            return Path.Combine("/nvram", CurrentConfigFileName);
         }
 
         private static string GetDefaultFilePath()
         {
-            return Path.Combine(
-                Directory.GetApplicationRootDirectory(),
-                $"Nvram/{DefaultConfigFileName}");
+            return Path.Combine("/nvram", DefaultConfigFileName);
         }
 
         private void ReadFile(string filePath)
