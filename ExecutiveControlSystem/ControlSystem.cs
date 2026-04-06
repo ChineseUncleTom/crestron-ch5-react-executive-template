@@ -163,11 +163,11 @@ namespace ExecutiveControlSystem
                 return;
             }
 
-            // ── Teams / BYOD mode toggles ────────────────────────────────────────
+            // ── Ingest / BYOD mode toggles ───────────────────────────────────────
 
-            if (joinNum == JoinMap.TEAMS_MODE_BTN)
+            if (joinNum == JoinMap.INGEST_MODE_BTN)
             {
-                _room.TeamsModeToggle();
+                _room.IngestModeToggle();
                 return;
             }
 

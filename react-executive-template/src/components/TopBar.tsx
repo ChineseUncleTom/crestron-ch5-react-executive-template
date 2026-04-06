@@ -120,7 +120,7 @@ const TopBar: React.FC<TopBarProps> = ({ title }) => {
   const label      = useSerialJoin(Joins.LABEL_SERIAL);
   const roomName   = useSerialJoin(Joins.ROOM_NAME_SERIAL);
   const roomNumber = useSerialJoin(Joins.ROOM_NUMBER_SERIAL);
-  const inMeeting  = useDigitalJoin(Joins.TEAMS_MODE_FB);
+  const inMeeting  = useDigitalJoin(Joins.INGEST_MODE_FB);
   const byodActive = useDigitalJoin(Joins.BYOD_MODE_FB);
 
   const [showHelp, setShowHelp] = useState(false);
@@ -140,7 +140,7 @@ const TopBar: React.FC<TopBarProps> = ({ title }) => {
           <h1 className="exec-topbar__title">{title}</h1>
           {(inMeeting || byodActive) && (
             <span className={`exec-topbar__badge${byodActive ? ' exec-topbar__badge--byod' : ' exec-topbar__badge--meeting'}`}>
-              {byodActive ? 'BYOD Active' : 'In Meeting'}
+              {byodActive ? 'BYOD Active' : 'Ingest Active'}
             </span>
           )}
         </div>

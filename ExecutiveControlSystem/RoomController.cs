@@ -29,7 +29,7 @@ namespace ExecutiveControlSystem
         private bool   _masterMuted;
         private ushort _brightness;
         private bool   _roomIsOn;
-        private bool   _teamsModeOn;
+        private bool   _ingestModeOn;
         private bool   _byodModeOn;
 
         // Destination power / video state (4 destinations)
@@ -125,11 +125,12 @@ namespace ExecutiveControlSystem
             for (uint i = 0; i < 4; i++)
                 _panel.BooleanInput[JoinMap.VIDEO_DEST_ACTIVE_1 + i].BoolValue = false;
 
-            // Clear Teams / BYOD modes
-            _teamsModeOn = false;
-            _byodModeOn  = false;
-            _panel.BooleanInput[JoinMap.TEAMS_MODE_FB].BoolValue = false;
-            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue  = false;
+            // Clear Ingest / BYOD modes
+            _ingestModeOn = false;
+            _byodModeOn   = false;
+            _panel.BooleanInput[JoinMap.INGEST_MODE_FB].BoolValue = false;
+            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue   = false;
+            SendSourceFarEndVisibilityFeedback();
 
             SendSystemOnFeedback();
         }
@@ -181,30 +182,49 @@ namespace ExecutiveControlSystem
             _panel.BooleanInput[JoinMap.SYSTEM_OFF_FB].BoolValue = _roomIsOn;
         }
 
-        // ── Teams / BYOD mode toggles ────────────────────────────────────────────
+        // ── Ingest / BYOD mode toggles ───────────────────────────────────────────
 
-        /// <summary>Toggles Teams meeting mode and sends feedback to the panel.</summary>
-        public void TeamsModeToggle()
+        /// <summary>
+        /// Toggles Ingest Mode and sends feedback to the panel.
+        /// When Ingest Mode is activated the per-source far-end visibility
+        /// signals are updated so the UI can split sources into "far end" and
+        /// "local" sections.  Ingest Mode and BYOD Mode are now independent.
+        /// </summary>
+        public void IngestModeToggle()
         {
-            _teamsModeOn = !_teamsModeOn;
-            if (_teamsModeOn)
-                _byodModeOn = false; // mutually exclusive with BYOD
+            _ingestModeOn = !_ingestModeOn;
 
-            CrestronConsole.PrintLine("[RoomController] Teams mode = {0}", _teamsModeOn);
-            _panel.BooleanInput[JoinMap.TEAMS_MODE_FB].BoolValue = _teamsModeOn;
-            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue  = _byodModeOn;
+            CrestronConsole.PrintLine("[RoomController] Ingest mode = {0}", _ingestModeOn);
+            _panel.BooleanInput[JoinMap.INGEST_MODE_FB].BoolValue = _ingestModeOn;
+            SendSourceFarEndVisibilityFeedback();
         }
 
         /// <summary>Toggles BYOD mode and sends feedback to the panel.</summary>
         public void ByodModeToggle()
         {
             _byodModeOn = !_byodModeOn;
-            if (_byodModeOn)
-                _teamsModeOn = false; // mutually exclusive with Teams
 
             CrestronConsole.PrintLine("[RoomController] BYOD mode = {0}", _byodModeOn);
-            _panel.BooleanInput[JoinMap.TEAMS_MODE_FB].BoolValue = _teamsModeOn;
-            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue  = _byodModeOn;
+            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue = _byodModeOn;
+        }
+
+        /// <summary>
+        /// Sends per-source far-end visibility signals to the panel.
+        /// When Ingest Mode is active, non-Room-PC sources (IsRoomPC == false)
+        /// are marked visible in the "far end" section; all signals are cleared
+        /// when Ingest Mode is off.
+        /// </summary>
+        private void SendSourceFarEndVisibilityFeedback()
+        {
+            var sources = _systemInfo.Config?.VideoSources;
+            for (int i = 0; i < JoinMap.VIDEO_SRC_FAR_END_VISIBLE.Length; i++)
+            {
+                bool visible = false;
+                if (_ingestModeOn && sources != null && i < sources.Count)
+                    visible = !sources[i].IsRoomPC;
+
+                _panel.BooleanInput[JoinMap.VIDEO_SRC_FAR_END_VISIBLE[i]].BoolValue = visible;
+            }
         }
 
         // ── Lighting ─────────────────────────────────────────────────────────────
@@ -427,8 +447,8 @@ namespace ExecutiveControlSystem
             _panel.UShortInput[JoinMap.BRIGHTNESS_FB].UShortValue = _brightness;
 
             SendSystemOnFeedback();
-            _panel.BooleanInput[JoinMap.TEAMS_MODE_FB].BoolValue = _teamsModeOn;
-            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue  = _byodModeOn;
+            _panel.BooleanInput[JoinMap.INGEST_MODE_FB].BoolValue = _ingestModeOn;
+            _panel.BooleanInput[JoinMap.BYOD_MODE_FB].BoolValue   = _byodModeOn;
 
             for (int i = 0; i < 4; i++)
             {
@@ -444,6 +464,7 @@ namespace ExecutiveControlSystem
 
             SendSourceNameFeedback();
             SendDestinationNameFeedback();
+            SendSourceFarEndVisibilityFeedback();
 
             _audio.RefreshAll();
             _camera.RefreshAll();

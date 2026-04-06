@@ -140,6 +140,9 @@ namespace ExecutiveControlSystem
         {
             public string Name { get; set; }
             public uint Id { get; internal set; }
+            /// <summary>When true, this source originates from the Room PC (e.g. Teams content window).
+            /// Used by Ingest Mode to separate Room PC sources from shareable external sources.</summary>
+            public bool IsRoomPC { get; set; }
         }
 
         public class VideoDestination

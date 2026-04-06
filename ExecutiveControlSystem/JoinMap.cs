@@ -94,10 +94,10 @@ namespace ExecutiveControlSystem
         /// <summary>Feedback to panel – destination 4 video output is on.</summary>
         public const uint VIDEO_DEST_VIDEO_FB_4 = 38;
 
-        /// <summary>Panel button – toggle Teams meeting mode.</summary>
-        public const uint TEAMS_MODE_BTN = 41;
-        /// <summary>Feedback to panel – Teams meeting mode is active.</summary>
-        public const uint TEAMS_MODE_FB = 42;
+        /// <summary>Panel button – toggle Ingest Mode.</summary>
+        public const uint INGEST_MODE_BTN = 41;
+        /// <summary>Feedback to panel – Ingest Mode is active.</summary>
+        public const uint INGEST_MODE_FB = 42;
         /// <summary>Panel button – toggle BYOD mode.</summary>
         public const uint BYOD_MODE_BTN = 43;
         /// <summary>Feedback to panel – BYOD mode is active.</summary>
@@ -522,5 +522,23 @@ namespace ExecutiveControlSystem
         public const uint SETTINGS_BYOD_AUTO_POWER_BTN = 136;
         /// <summary>Feedback to panel – BYOD auto-power-on setting is enabled.</summary>
         public const uint SETTINGS_BYOD_AUTO_POWER_FB = 137;
+
+        // ── Digital – source visible in "far end" section during Ingest Mode (joins 138–142) ──
+        /// <summary>Feedback to panel – source 1 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
+        public const uint VIDEO_SRC_FAR_END_VISIBLE_1 = 138;
+        /// <summary>Feedback to panel – source 2 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
+        public const uint VIDEO_SRC_FAR_END_VISIBLE_2 = 139;
+        /// <summary>Feedback to panel – source 3 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
+        public const uint VIDEO_SRC_FAR_END_VISIBLE_3 = 140;
+        /// <summary>Feedback to panel – source 4 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
+        public const uint VIDEO_SRC_FAR_END_VISIBLE_4 = 141;
+        /// <summary>Feedback to panel – source 5 is visible in the "far end" section (non-Room-PC, Ingest Mode active).</summary>
+        public const uint VIDEO_SRC_FAR_END_VISIBLE_5 = 142;
+
+        public static readonly uint[] VIDEO_SRC_FAR_END_VISIBLE = {
+            VIDEO_SRC_FAR_END_VISIBLE_1, VIDEO_SRC_FAR_END_VISIBLE_2,
+            VIDEO_SRC_FAR_END_VISIBLE_3, VIDEO_SRC_FAR_END_VISIBLE_4,
+            VIDEO_SRC_FAR_END_VISIBLE_5,
+        };
     }
 }
