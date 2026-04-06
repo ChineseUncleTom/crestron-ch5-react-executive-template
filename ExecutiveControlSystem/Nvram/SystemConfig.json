@@ -727,35 +727,35 @@
         { "Name": "None",             "Id": 0, "IsRoomPC": false },
         { "Name": "Teams Content",    "Id": 1, "IsRoomPC": true  },
         { "Name": "Teams Attendance", "Id": 2, "IsRoomPC": true  },
-        { "Name": "Table USB-C",      "Id": 3, "IsRoomPC": false },
-        { "Name": "Table HDMI",       "Id": 4, "IsRoomPC": false },
-        { "Name": "Wall HDMI",        "Id": 5, "IsRoomPC": false },
-        { "Name": "",                 "Id": 6, "IsRoomPC": false },
-        { "Name": "",                 "Id": 7, "IsRoomPC": false },
-        { "Name": "",                 "Id": 8, "IsRoomPC": false }
+        { "Name": "Table A USB-C",    "Id": 3, "IsRoomPC": false },
+        { "Name": "Table A HDMI",     "Id": 4, "IsRoomPC": false },
+        { "Name": "Table B USB-C",    "Id": 5, "IsRoomPC": false },
+        { "Name": "Table B HDMI",     "Id": 6, "IsRoomPC": false },
+        { "Name": "Table C USB-C",    "Id": 7, "IsRoomPC": false },
+        { "Name": "Table C HDMI",     "Id": 8, "IsRoomPC": false }
     ],
 
     "VideoDestinations": [
         {
-            "Name": "Display<br>Left<br>206",
+            "Name": "Display Left 206",
             "IsDisplay": true,
             "IsLocal": true,
             "DmLocate": 1
         },
         {
-            "Name": "Display<br>Right<br>206",
+            "Name": "Display Right 206",
             "IsDisplay": true,
             "IsLocal": true,
             "DmLocate": 1
         },
         {
-            "Name": "Projector<br>204",
+            "Name": "Projector 204",
             "IsDisplay": false,
             "IsLocal": true,
             "DmLocate": 72
         },
         {
-            "Name": "Projector<br>202",
+            "Name": "Projector 202",
             "IsDisplay": false,
             "IsLocal": true,
             "DmLocate": 73
