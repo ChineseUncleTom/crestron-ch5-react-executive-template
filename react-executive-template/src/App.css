@@ -23,6 +23,19 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════════
+   Global element resets
+   Crestron CH5 panels run an older Chromium build whose UA stylesheet applies
+   `-webkit-appearance: button` and a white `ButtonFace` background to every
+   <button> element.  Clearing appearance here lets the CSS-class background
+   (including semi-transparent rgba values) render correctly on-panel.
+   ══════════════════════════════════════════════════════════════════════════════ */
+
+button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════════
    App Shell – sidebar + main column layout
    ══════════════════════════════════════════════════════════════════════════════ */
 

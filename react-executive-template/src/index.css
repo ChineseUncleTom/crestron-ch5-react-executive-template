@@ -1,3 +1,13 @@
+/* Ensure the dark base colour is present at every level of the DOM so that
+   semi-transparent rgba() backgrounds composite correctly on Crestron panels.
+   The Crestron CH5 Chromium WebView defaults the html-level background to
+   white; without this rule rgba colours appear washed-out / white. */
+html,
+body,
+#root {
+  background-color: #0f172a;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
