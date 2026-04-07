@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Crestron.SimplSharp;
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
@@ -71,12 +72,12 @@ namespace ExecutiveControlSystem
             string currentPath = GetCurrentFilePath();
             string defaultPath = GetDefaultFilePath();
 
-            if (File.Exists(currentPath))
+            if (System.IO.File.Exists(currentPath))
             {
                 CrestronConsole.PrintLine("[UserConfig] Loading from CurrentUserConfig.json");
                 ReadFile(currentPath);
             }
-            else if (File.Exists(defaultPath))
+            else if (System.IO.File.Exists(defaultPath))
             {
                 CrestronConsole.PrintLine("[UserConfig] CurrentUserConfig.json not found – loading from DefaultUserConfig.json");
                 ReadFile(defaultPath);
@@ -200,20 +201,20 @@ namespace ExecutiveControlSystem
         private static string GetCurrentFilePath()
         {
             string appDir = Crestron.SimplSharp.CrestronIO.Directory.GetApplicationDirectory();
-            return Path.Combine(appDir, "Nvram", CurrentConfigFileName);
+            return Crestron.SimplSharp.CrestronIO.Path.Combine(appDir, $"/nvram/{CurrentConfigFileName}");
         }
 
         private static string GetDefaultFilePath()
         {
             string appDir = Crestron.SimplSharp.CrestronIO.Directory.GetApplicationDirectory();
-            return Path.Combine(appDir, "Nvram", DefaultConfigFileName);
+            return Crestron.SimplSharp.CrestronIO.Path.Combine(appDir, $"/nvram/{DefaultConfigFileName}");
         }
 
         private void ReadFile(string filePath)
         {
             try
             {
-                string json = File.ReadAllText(filePath);
+                string json = System.IO.File.ReadAllText(filePath);
                 CrestronConsole.PrintLine("[UserConfig] JSON read: {0}", json);
 
                 JsonConvert.PopulateObject(json, _data);
@@ -232,7 +233,7 @@ namespace ExecutiveControlSystem
             try
             {
                 string json = JsonConvert.SerializeObject(_data, Formatting.Indented);
-                File.WriteAllText(filePath, json);
+                System.IO.File.WriteAllText(filePath, json);
 
                 CrestronConsole.PrintLine("[UserConfig] Saved to file OK");
             }
