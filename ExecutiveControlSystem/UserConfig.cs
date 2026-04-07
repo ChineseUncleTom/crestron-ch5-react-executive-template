@@ -1,10 +1,10 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using Crestron.SimplSharp;
 using Crestron.SimplSharp.CrestronIO;
 using Crestron.SimplSharpPro;
 using Crestron.SimplSharpPro.DeviceSupport;
-using Newtonsoft.Json;
 
 namespace ExecutiveControlSystem
 {
@@ -72,12 +72,12 @@ namespace ExecutiveControlSystem
             string currentPath = GetCurrentFilePath();
             string defaultPath = GetDefaultFilePath();
 
-            if (System.IO.File.Exists(currentPath))
+            if (File.Exists(currentPath))
             {
                 CrestronConsole.PrintLine("[UserConfig] Loading from CurrentUserConfig.json");
                 ReadFile(currentPath);
             }
-            else if (System.IO.File.Exists(defaultPath))
+            else if (File.Exists(defaultPath))
             {
                 CrestronConsole.PrintLine("[UserConfig] CurrentUserConfig.json not found – loading from DefaultUserConfig.json");
                 ReadFile(defaultPath);
@@ -200,24 +200,32 @@ namespace ExecutiveControlSystem
 
         private static string GetCurrentFilePath()
         {
-            string appDir = Crestron.SimplSharp.CrestronIO.Directory.GetApplicationDirectory();
-            return Crestron.SimplSharp.CrestronIO.Path.Combine(appDir, $"/nvram/{CurrentConfigFileName}");
+            return Path.Combine(
+                Directory.GetApplicationRootDirectory(),
+                $"Nvram/{CurrentConfigFileName}");
         }
 
         private static string GetDefaultFilePath()
         {
-            string appDir = Crestron.SimplSharp.CrestronIO.Directory.GetApplicationDirectory();
-            return Crestron.SimplSharp.CrestronIO.Path.Combine(appDir, $"/nvram/{DefaultConfigFileName}");
+            return Path.Combine(
+                Directory.GetApplicationRootDirectory(),
+                $"Nvram/{DefaultConfigFileName}");
         }
 
         private void ReadFile(string filePath)
         {
             try
             {
-                string json = System.IO.File.ReadAllText(filePath);
-                CrestronConsole.PrintLine("[UserConfig] JSON read: {0}", json);
+                string json;
+                using (var reader = new StreamReader(filePath, System.Text.Encoding.Default))
+                    json = reader.ReadToEnd();
 
-                JsonConvert.PopulateObject(json, _data);
+                CrestronConsole.PrintLine("[UserConfig] JSON read OK ({0} chars)", json.Length);
+                var loaded = JsonSerializer.Deserialize<UserConfigData>(json);
+                if (loaded != null)
+                    _data = loaded;
+                else
+                    CrestronConsole.PrintLine("[UserConfig] Deserialization returned null – using defaults");
                 CrestronConsole.PrintLine("[UserConfig] Loaded from file OK");
             }
             catch (Exception ex)
@@ -232,8 +240,9 @@ namespace ExecutiveControlSystem
         {
             try
             {
-                string json = JsonConvert.SerializeObject(_data, Formatting.Indented);
-                System.IO.File.WriteAllText(filePath, json);
+                string json = JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true });
+                using (var writer = new StreamWriter(filePath, false, System.Text.Encoding.Default))
+                    writer.Write(json);
 
                 CrestronConsole.PrintLine("[UserConfig] Saved to file OK");
             }
