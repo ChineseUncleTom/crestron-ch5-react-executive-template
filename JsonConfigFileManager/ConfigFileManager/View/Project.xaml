@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="ConfigFileManager.View.Project"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vml = "clr-namespace:ConfigFileManager.VML"
+    xmlns:views="clr-namespace:ConfigFileManager.View"
+    vml:ViewModelLocator.AutoHookedUpViewModel = "True"   
+    >
+    <Grid>
+        <TabControl>
+            <TabItem Header="Processors">
+                <Grid>
+                    <views:Processor x:Name = "ProcessorControl"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Processor Templates">
+                <Grid>
+                    <views:ProcessorTemplate x:Name = "ProcessorTemplateControl"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Config Templates">
+                <Grid>
+                    <views:ConfigTemplate x:Name = "ConfigTemplateControl"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

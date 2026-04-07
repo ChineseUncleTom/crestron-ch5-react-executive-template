@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="ConfigFileManager.View.ProcessorTemplate"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vml = "clr-namespace:ConfigFileManager.VML"
+    xmlns:vm="clr-namespace:ConfigFileManager.ViewModel"
+    xmlns:views="clr-namespace:ConfigFileManager.View"
+    vml:ViewModelLocator.AutoHookedUpViewModel = "True"   
+    xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+        >
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Add" Margin = "0 5 3 5" Click="ButtonAdd_Click" />
+                <Button Content="Delete" Margin = "0 5 3 5" Click="ButtonDelete_Click" />
+            </StackPanel>
+            <toolkit:DataGrid x:Name="TheGrid" ItemsSource="{Binding CurrentProcessorTemplate}" AutoGenerateColumns="False" CanUserAddRows="False">
+                <toolkit:DataGrid.Columns>
+                    <toolkit:DataGridTextColumn Header="Template Name" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding TemplateName}" />
+                    <toolkit:DataGridTextColumn Header="Port" MinWidth="50" Width="SizeToCells" IsReadOnly="False" Binding="{Binding Port}" />
+                    <toolkit:DataGridTextColumn Header="Username" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding UserName}" />
+                    <toolkit:DataGridTextColumn Header="Password" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding Password}" />
+                    <toolkit:DataGridTextColumn Header="Config Path" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding ConfigPath}" />
+                    <toolkit:DataGridCheckBoxColumn Header="Reboot" MinWidth="50" Width="SizeToCells" IsReadOnly="False" Binding="{Binding RebootAfter}" />
+                </toolkit:DataGrid.Columns>
+            </toolkit:DataGrid>
+        </StackPanel>
+    </Grid>
+</UserControl>

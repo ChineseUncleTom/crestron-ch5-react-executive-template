@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="ConfigFileManager.View.Processor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vml = "clr-namespace:ConfigFileManager.VML"
+    xmlns:views="clr-namespace:ConfigFileManager.View"
+    xmlns:vm="clr-namespace:ConfigFileManager.ViewModel"
+    vml:ViewModelLocator.AutoHookedUpViewModel = "True"
+    xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             >
+        <DockPanel x:Name="TheStack" Height="Auto" LastChildFill="True">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <Button Content="Add" Margin = "0 5 3 5" Click="ButtonAdd_Click" />
+                <Button Content="Delete" Margin = "0 5 3 5" Click="ButtonDelete_Click" />
+                <Button Content="Discover" Margin = "0 5 3 5" Click="ButtonDiscover_Click" />
+            </StackPanel>
+            <ScrollViewer DockPanel.Dock="Top">
+                <toolkit:DataGrid x:Name="TheGrid" ItemsSource="{Binding CurrentProcessors}" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <toolkit:DataGrid.Columns>
+                        <toolkit:DataGridTextColumn Header="Hostname" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding HostName}" />
+                        <toolkit:DataGridTextColumn Header="Port" MinWidth="50" Width="SizeToCells" IsReadOnly="False" Binding="{Binding Port}" />
+                        <toolkit:DataGridTextColumn Header="Username" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding UserName}" />
+                        <toolkit:DataGridTextColumn Header="Password" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding Password}" />
+                        <toolkit:DataGridTextColumn Header="ConfigPath" MinWidth="150" Width="SizeToCells" IsReadOnly="False" Binding="{Binding ConfigPath}" />
+                        <toolkit:DataGridCheckBoxColumn Header="Reboot" MinWidth="50" Width="SizeToCells" IsReadOnly="False" Binding="{Binding RebootAfter}" />
+                        <toolkit:DataGridTemplateColumn Header="Config Template" MinWidth="150" Width="SizeToCells" IsReadOnly="True" >
+                            <toolkit:DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox SelectedValue="{Binding ConfigTemplate}"
+                                          DisplayMemberPath="TemplateName" SelectedValuePath="Guid"
+                                          ItemsSource="{Binding Source={x:Static vm:ProcessorModel.ConfigTemplates}}" />
+                                </DataTemplate>
+                            </toolkit:DataGridTemplateColumn.CellTemplate>
+                        </toolkit:DataGridTemplateColumn>
+                    <toolkit:DataGridTemplateColumn MinWidth="120" Width="SizeToCells" IsReadOnly="True" >
+                        <toolkit:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Edit Config" Margin = "0 5 3 5" />
+                            </DataTemplate>
+                        </toolkit:DataGridTemplateColumn.CellTemplate>
+                    </toolkit:DataGridTemplateColumn>
+                    <toolkit:DataGridTemplateColumn MinWidth="120" Width="SizeToCells" IsReadOnly="True" >
+                        <toolkit:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Export Config" Margin = "0 5 3 5" />
+                            </DataTemplate>
+                        </toolkit:DataGridTemplateColumn.CellTemplate>
+                    </toolkit:DataGridTemplateColumn>
+                    <toolkit:DataGridTemplateColumn MinWidth="120" Width="SizeToCells" IsReadOnly="True" >
+                        <toolkit:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Send Config" Margin = "0 5 3 5" />
+                            </DataTemplate>
+                        </toolkit:DataGridTemplateColumn.CellTemplate>
+                    </toolkit:DataGridTemplateColumn>
+                    <toolkit:DataGridTemplateColumn MinWidth="120" Width="SizeToCells" IsReadOnly="True" >
+                        <toolkit:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Pull Config" Margin = "0 5 3 5" />
+                            </DataTemplate>
+                        </toolkit:DataGridTemplateColumn.CellTemplate>
+                    </toolkit:DataGridTemplateColumn>
+                </toolkit:DataGrid.Columns>
+                    
+                </toolkit:DataGrid>
+            </ScrollViewer>
+        </DockPanel>
+</UserControl>
