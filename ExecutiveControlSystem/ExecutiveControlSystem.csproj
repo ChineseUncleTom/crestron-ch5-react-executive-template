@@ -178,7 +178,9 @@
     <Compile Include="Video.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Nvram\DefaultUserConfig.json" />
+    <None Include="Nvram\DefaultUserConfig.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Nvram\SystemConfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
